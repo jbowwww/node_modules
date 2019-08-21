@@ -1,6 +1,7 @@
 
+const obj /*{ assignDefaults, inspect, promisify }*/ = require('../obj');
+const inspect = obj.inspect;
 const log = require('debug')('test/Queue');
-const { inspect } = require('../obj')
 const util = require('util');
 const { EventEmitter } = require('events');
 
@@ -17,37 +18,39 @@ function Queue(options = { concurrency: 1 }) {
 	this.queue = [];
 	this.maxQueueCount = 0;
 	this.activeCount = 0;
+	this.maxActiveCount = 0;
 	this.runCount = 0;
 	this.successCount = 0;
 	this.errors = [];
 	this.concurrency = typeof options === 'number' ? options : options.concurrency;
+	// return obj.inspect.withGetters(this);
 }
 
-Queue.prototype._debug = function _debug() {
-	return JSON.stringify({
-		'queue.length': this.queue.length,
-		maxQueueCount: this.maxQueueCount,
-		concurrency: this.concurrency,
-		activeCount: this.activeCount,
-		runCount: this.runCount,
-		successCount: this.successCount,
-		'errors.length': this.errors.length
-	});
-};
+// Queue.prototype._debug = function _debug() {
+// 	return JSON.stringify({
+// 		'queue.length': this.queue.length,
+// 		maxQueueCount: this.maxQueueCount,
+// 		concurrency: this.concurrency,
+// 		activeCount: this.activeCount,
+// 		runCount: this.runCount,
+// 		successCount: this.successCount,
+// 		'errors.length': this.errors.length
+// 	});
+// };
 
 function _next() {
 	this.activeCount--;
 	this.emit('next');
 	if (this.queue.length > 0) {
-		log(`Dequeueing task : ${this._debug()}`);
+		log(`Dequeueing task : ${inspect(this)}`);
 		const task = this.queue.shift();
 		if (this.queue.length === 0) {
-			log(`Queue empty : ${this._debug()}`);
+			log(`Queue empty : ${inspect(this)}`);
 			this.emit('empty');
 		}
 		const r = task();	// should always return undefined
 	} else if (this.activeCount === 0) {
-		log(`Queue idle : ${this._debug()}`);
+		log(`Queue idle : ${inspect(this)}`);
 		this.emit('idle');
 	}
 }
@@ -55,9 +58,11 @@ function _next() {
 function _run(fn, ...args)  {
 	const runStart = Date.now();
 	let runEnd;
-	this.activeCount++;
+	if (++this.activeCount > this.maxActiveCount) {
+		this.maxActiveCount = this.activeCount;
+	}
 	this.runCount++;
-	log(`Running task : ${this._debug()}`);
+	log(`Running task : ${inspect(this)}`);
 	var r = fn(...args);
 	if (!(r instanceof Promise)) {
 		r = Promise.resolve(r);
@@ -66,14 +71,14 @@ function _run(fn, ...args)  {
 		runEnd = Date.now();
 		const runDuration = runEnd - runStart;
 		this.successCount++;
-		log(`Task success : result=${inspect(result)} runDuration=${runDuration}ms ${this._debug()}`);
+		log(`Task success : result=${inspect(result)} runDuration=${runDuration}ms ${inspect(this)}`);
 		return result;
 	}, err => {
 		this.activeCount--;
 		runEnd = Date.now();
 		const runDuration = runEnd - runStart;
 		this.errors.push(err);
-		log(`Task error : err=${err.stack||err} runDuration=${runDuration}ms ${this._debug()}`);
+		log(`Task error : err=${err.stack||err} runDuration=${runDuration}ms ${inspect(this)}`);
 	})
 	.then(result => {
 		/*process.*/setTimeout(_next.bind(this), 0);
@@ -90,7 +95,7 @@ Queue.prototype.add = Queue.prototype.enqueue = function add(fn, ...args) {
 		_run.call(this, fn, ...args);
 		return Promise.resolve();
 	} else {
-		log(`Queueing task : ${this._debug()}`);
+		log(`Queueing task : ${inspect(this)}`);
 		this.queue.push(() => _run.call(this, fn, ...args));
 		if (this.queue.length > this.maxQueueCount) {
 			this.maxQueueCount = this.queue.length;
@@ -108,7 +113,7 @@ Queue.prototype.addAndRun = Queue.prototype.enqueueAndRun = function addAndRun(f
 	if (this.activeCount < this.concurrency) { 
 		return _run(fn, ...args);
 	} else {
-		log(`Queueing task : ${this._debug()}`);
+		log(`Queueing task : ${inspect(this)}`);
 		return new Promise((resolve, reject) => {
 			this.queue.push(() => _run(fn, ...args).then(resolve, reject));
 			if (this.queue.length > this.maxQueueCount) {

@@ -9,30 +9,53 @@ describe("Queue instance unit test", function() {
 
 	this.timeout(30000);
 	const q = new Queue({ concurrency: 4 });
-	const t = val => new Promise(resolve => setTimeout(() => resolve(val), 100));
 
 	log('Queue unit tests');
 
 	beforeEach('create fsIterable', async function createFsIterable() { });
 
-	it('should fulfill a promise when done', async function() {
-		log(`Start: `);
-		for (let i = 0; i < 100; i++) {
-			let e = q.enqueue(t, i);
-			log(`enqueue task(${i}): q=${q._debug()}`);
-			let r = await e;
-			log(`task(${i}) enqueue result=${inspect(r)}: q=${q._debug()}`);
-		}
-		log(`Idle: `);
-		await q.onIdle();
-		log(`Done: ${q._debug()}`);
+	it('should fulfill a promise when done, if 100 tasks were enqueued, 100 should have completed - in order, with maxActiveCount <= 4', async function() { 
+		await assert.doesNotReject(async() => {
+			let fails = [];
+			let lastValue;
+			log(`Start: `);
+			try {
+				for (let i = 0; i < 100; i++) {
+					let r;
+					log(`enqueue task(${i}): q=${inspect(q)}`);
+					try {
+						r = await q.enqueue(
+							val => new Promise(resolve => {
+								setTimeout(() => resolve(val), 60);
+							}), i );
+						if (lastValue && r <= lastValue) {
+							throw new Error(`r=${r} <= lastValue=${lastValue}`);
+						}
+						if (q.maxActiveCount > 4) {
+							throw new Error(`q.maxActiveCount=${q.maxActiveCount} > 4, at i=${i}`);
+						}
+						log(`task(${i}) enqueue result=${inspect(r)}: q=${inspect(q)}`);
+					} catch (e) {
+						fails.push(e);
+					}
+				}
+			} catch (e) {
+				log(`Error!: ${e.stack||e}`);
+				throw e;
+			}
+			log('Idle: ');
+			await q.onIdle();
+			if (fails.length > 0) {
+				throw new Error('AggregateError:\n%s' + fails.reduce((aggString, errorMsg) => aggString + errorMsg.toString(), ''));
+			}
+			log(`Done: ${inspect(q)}`);
+			assert.equal(q.successCount, 100);
+		});
 	});
-
 });
 
-process.once('SIGINT', onSigInt);
-function onSigInt() {
-log(`fsIterable: ${inspect(fsIterable)}`);
+process.once('SIGINT', function onSigInt() {
+	log(`fsIterable: ${inspect(fsIterable)}`);
 	process.once('SIGINT', quitHandler);
 	setTimeout(() => {
 			process.off('SIGINT', quitHandler);
@@ -41,4 +64,4 @@ log(`fsIterable: ${inspect(fsIterable)}`);
 	function quitHandler() {
 		process.nextTick(() => process.exit(0));
 	}
-};
+});
