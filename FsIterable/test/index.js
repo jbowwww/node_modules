@@ -7,19 +7,7 @@ const promisify = require('util').promisify;
 const nodePath = require('path');
 const { exec } = ({ exec: promisify(require('child_process').exec) });
 const FsIterable = require('../index.js');
-
 const log = require('debug')('test/FsIterable');//.extend('log');// log.log = (innerLog => ((...args) => (innerLog('prefix', ...args))))(console.log.bind(console));
-
-var mochaAsync = fn => fn;
-// {
-//     return async () => {
-//         try {
-//             return await fn();
-//         } catch (err) {
-//             log(` ! Error: ${err.stack||err}`);
-//         }
-//     };
-// };
 
 describe("FsIterable instance unit test", function() {
 
