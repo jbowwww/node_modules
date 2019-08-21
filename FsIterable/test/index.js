@@ -13,6 +13,7 @@ describe("FsIterable instance unit test", function() {
 
 	const exePath = nodePath.dirname(__filename);
 	const testPath = nodePath.join(exePath, './__testdata__');
+	const largeFsWalkPath = '/mnt/Stor2/mystuff/incoming'
 	let fsIterable;
 
 	log('FsIterable unit tests setup: testPath=\'%s\'\n\nassert=%s\n\n', testPath, inspect(assert));
@@ -70,23 +71,35 @@ describe("FsIterable instance unit test", function() {
 		await assert.doesNotReject(async() => {
 			for await (let fsItem of fsIterable) {
 				log(`fsItem: Progress = ${(100 * fsIterable.itemIndex / fsIterable.count.all).toFixed(1)}% fsIterable.progress=${inspect(fsIterable.progress)}fsItem='${inspect(fsItem/*.path*/)}'`);//${inspect(fsItem)}`);
+				await new Promise(resolve => setTimeout(resolve, 50));
 			}
 		});
 		log(`Done: Count: ${inspect(fsIterable.count)} Progress=${inspect(fsIterable.progress)}`);
 		assert.equal(fsIterable.count.all, 9);
 	});
 
-});
+	it('should handle a large filesystem walk and use concurrency', async function walkLargeFs() {
+		const fsIterable = new FsIterable({ path: largeFsWalkPath, maxDepth: 4, concurrency: 4 });
+		await assert.doesNotReject(async() => {
+			for await (let fsItem of fsIterable) {
+				log(`fsItem: Progress = ${(100 * fsIterable.itemIndex / fsIterable.count.all).toFixed(1)}% fsIterable.progress=${inspect(fsIterable.progress)}fsItem='${inspect(fsItem/*.path*/)}'`);//${inspect(fsItem)}`);
+				await new Promise(resolve => setTimeout(resolve, 100));
+			}
+		});
 
-process.once('SIGINT', onSigInt);
-function onSigInt() {
-	log(`fsIterable: ${inspect(fsIterable)}`);
-	process.once('SIGINT', quitHandler);
-	setTimeout(() => {
-			process.off('SIGINT', quitHandler);
-			process.once('SIGINT', onSigInt);
-		}, 1000);
-	function quitHandler() {
-		process.nextTick(() => process.exit(0));
+	});
+
+	process.once('SIGINT', onSigInt);
+	function onSigInt() {
+		log(`fsIterable: ${inspect(fsIterable)}`);
+		process.once('SIGINT', quitHandler);
+		setTimeout(() => {
+				process.off('SIGINT', quitHandler);
+				process.once('SIGINT', onSigInt);
+			}, 1000);
+		function quitHandler() {
+			process.nextTick(() => process.exit(0));
+		}
 	}
-};
+
+});

@@ -6,6 +6,7 @@ const promisifyObject = o => Object.keys(o).reduce((a, k) =>
 	Object.defineProperty(a, k, { writeable: true, enumerable: true, value: o[k] instanceof Function ? obj.promisify(o[k]) : o[k] }), {});
 const nodeFs = promisifyObject(require('fs'));
 const nodePath = require('path');
+const Limit = require('../Limit');
 const stream = new require('stream');
 stream.finished = obj.promisify(stream.finished);
 var pipeline = obj.promisify(stream.pipeline);
@@ -29,6 +30,7 @@ function FsIterable(options) {
 	this.options = options = obj.assignDefaults(options, {
 		path: nodePath.resolve(options.path || '.'),
 		maxDepth: 1,
+		concurrency: 1,	// TODO
 		filter: item => true,
 		handleError(err) { fsIterable.errors.push(err); log/*.warn*/(`Error!: ${err/*.stack*/}`); }
 	});
@@ -54,7 +56,8 @@ function FsIterable(options) {
 
 	// Start iterator before asyncIterator is even invoked
 	// (async() => {
-		const innerIter = fsIterateInner(this.options.path);
+		const limitFsIter = Limit(fsIterateInner, 4);
+		const innerIter = limitFsIter(this.options.path);
 		this[Symbol.asyncIterator] = async function* () {
 			this.itemIndex = 0;
 			log(`asyncIterator! this=${inspect(this)}`);
@@ -63,27 +66,29 @@ function FsIterable(options) {
 				yield item;
 				this.itemIndex++;
 			}
-		};
+		}
 	// })();
-
 	async function* fsIterateInner(path) {
 		try {
-			const item = await createItem(path);
 			fsIterable._fsIterateInnerCalls++;
-			// log('fsIterateInner: item=%s', inspect(item, { compact: true }));
+			const prItem = createItem(path);
+			yield prItem;
+			const item = await prItem;
 			const currentDepth = item.pathDepth - fsIterable._rootPathDepth;
-			log(`newItem: ${item.fileType}: currentDepth=${currentDepth} '${item.path}'`);
-			yield item;	//fsIterable.items.push(item);
+			log(`limitFsIter newItem: ${item.fileType}: currentDepth=${currentDepth} '${item.path}'`);
 			if (item.fileType === 'dir' && (fsIterable.options.maxDepth === 0 || currentDepth < fsIterable.options.maxDepth)) {
-				const names = await nodeFs.readdir(item.path)
-				const filteredNames = names.filter(fsIterable.options.filter || (() => true));
-				log('%d entries, %d matching filter at depth=%d in dir:%s, progress=%s', names.length, filteredNames.length, currentDepth, item.path, inspect(fsIterable.progress));
-				const paths = filteredNames.map(name => nodePath.join(item.path, name))
-				// const items = await Promise.all();
-				// yield items;
-				for await (const newItem of paths) {
-					yield* fsIterateInner(newItem);
-				}
+				const names = await nodeFs.readdir(item.path);
+				const paths = names
+					.filter(fsIterable.options.filter || (() => true))
+					.map(name => nodePath.join(item.path, name));
+				log('%d entries, %d matching filter at depth=%d in dir:%s, progress=%s', names.length, paths.length, currentDepth, item.path, inspect(fsIterable.progress));
+				// for (const newPath of paths) {
+					// for (const newItem of 
+					for (const newInner of paths.map(path => limitFsIter(path))) {
+						yield* newInner;
+					}						 // newItem;
+					// }
+				// }
 			}
 		} catch (e) {
 			fsIterable.options.handleError(e);
