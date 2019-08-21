@@ -1,0 +1,6 @@
+/node_modules/*
+mongodb.backup.181116.tar.gz
+*.sublime-workspace
+/couch/*
+test/__testdata
+test/__testdata__/*
