@@ -56,12 +56,12 @@ function FsIterable(options) {
 
 	// Start iterator before asyncIterator is even invoked
 	// (async() => {
-		const limitFsIter = Limit(fsIterateInner, 4);
-		const innerIter = limitFsIter(this.options.path);
+		// const limitFsIter = Limit(fsIterateInner, 4);
+		// const innerIter = limitFsIter(this.options.path);
 		this[Symbol.asyncIterator] = async function* () {
 			this.itemIndex = 0;
 			log(`asyncIterator! this=${inspect(this)}`);
-			for await(const item of innerIter) {//this._fsIterateInnerCalls > 0 || this.itemIndex < this.items.length) {
+			for await(const item of /*Array.from*/(fsIterateInner(this.options.path))) {
 				log(`item: ${item.fileType}: '${item.path}'`);
 				yield item;
 				this.itemIndex++;
@@ -84,7 +84,7 @@ function FsIterable(options) {
 				log('%d entries, %d matching filter at depth=%d in dir:%s, progress=%s', names.length, paths.length, currentDepth, item.path, inspect(fsIterable.progress));
 				// for (const newPath of paths) {
 					// for (const newItem of 
-					for (const newInner of paths.map(path => limitFsIter(path))) {
+					for (const newInner of paths.map(path => fsIterateInner(path))) {
 						yield* newInner;
 					}						 // newItem;
 					// }
