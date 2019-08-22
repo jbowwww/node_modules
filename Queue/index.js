@@ -81,7 +81,7 @@ function _run(fn, ...args)  {
 		log(`Task error : err=${err.stack||err} runDuration=${runDuration}ms ${inspect(this)}`);
 	})
 	.then(result => {
-		/*process.*/setTimeout(_next.bind(this), 0);
+		setTimeout(_next.bind(this), 0);
 		return result;
 	});
 };
@@ -97,15 +97,9 @@ Queue.prototype.add = Queue.prototype.enqueue = function add(fn, ...args) {
 	} else {
 		log(`Queueing task : ${inspect(this)}`);
 		this.queue.push(() => _run.call(this, fn, ...args));
-		if (this.queue.length > this.maxQueueCount) {
+		if (this.queue.length > this.maxQueueCount)
 			this.maxQueueCount = this.queue.length;
-		}
-		return new Promise((resolve, reject) => {
-			this.once('next', () => {
-				// this.off('next');
-				resolve();
-			});
-		})
+		return new Promise((resolve, reject) => this.once('next', () => resolve()));
 	}
 };
 

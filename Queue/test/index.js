@@ -8,13 +8,13 @@ const Queue = require('../index.js');
 describe("Queue instance unit test", function() {
 
 	this.timeout(30000);
-	const q = new Queue({ concurrency: 4 });
-
 	log('Queue unit tests');
 
 	beforeEach('create fsIterable', async function createFsIterable() { });
 
-	it('should fulfill a promise when done, if 100 tasks were enqueued, 100 should have completed - in order, with maxActiveCount <= 4', async function() { 
+	it('should fulfill a promise when done, if 100 tasks were enqueued, 100 should have completed - in order, with maxActiveCount==4', async function() { 
+		const concurrency = 2;
+		const q = new Queue({ concurrency });
 		await assert.doesNotReject(async() => {
 			let fails = [];
 			let lastValue;
@@ -52,16 +52,17 @@ describe("Queue instance unit test", function() {
 			assert.equal(q.successCount, 100);
 		});
 	});
-});
 
-process.once('SIGINT', function onSigInt() {
-	log(`fsIterable: ${inspect(fsIterable)}`);
-	process.once('SIGINT', quitHandler);
-	setTimeout(() => {
-			process.off('SIGINT', quitHandler);
-			process.once('SIGINT', onSigInt);
-		}, 1000);
-	function quitHandler() {
-		process.nextTick(() => process.exit(0));
-	}
+	process.once('SIGINT', function onSigInt() {
+		log(`fsIterable: ${inspect(fsIterable)}`);
+		process.once('SIGINT', quitHandler);
+		setTimeout(() => {
+				process.off('SIGINT', quitHandler);
+				process.once('SIGINT', onSigInt);
+			}, 1000);
+		function quitHandler() {
+			process.nextTick(() => process.exit(0));
+		}
+	});
+
 });
