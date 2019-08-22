@@ -31,16 +31,18 @@ describe("FsIterable instance unit test", function() {
 
 	it('should be async iterable', async function iterable() {
 		const fsIterable = new FsIterable(testPath);
-		await assert.doesNotReject(async() => { for await (const i of fsIterable) {} });
+		// await /*assert.doesNotReject*/(async() => {
+		 for await (const i of fsIterable) {}
+		  // });
 	});
 		
 	it('should yield 1 items for an empty directory walk', async function walkEmpty() {
 		const fsIterable = new FsIterable(testPath);
-		await assert.doesNotReject(async() => {
+		// await assert.doesNotReject(async() => {
 			for await (let fsItem of fsIterable) {
 				log(`fsItem: Progress = ${(100 * fsIterable.itemIndex / fsIterable.count.all).toFixed(1)}% fsIterable.progress=${inspect(fsIterable.progress)}fsItem='${inspect(fsItem/*.path*/)}'`);//${inspect(fsItem)}`);
 			}
-		});
+		// });
 		log(`Done: Count: ${inspect(fsIterable.count)} Progress=${inspect(fsIterable.progress)}`);
 		assert.equal(fsIterable.count.all, 1);
 	});
@@ -48,11 +50,11 @@ describe("FsIterable instance unit test", function() {
 	it('shold yield 2 items for a directory with 1 file walk', async function walk1File() {
 		await exec(`touch ${testPath}/__testfile__`);
 		const fsIterable = new FsIterable({ path: testPath, maxDepth: 4 });
-		await assert.doesNotReject(async() => {
+		// await assert.doesNotReject(async() => {
 			for await (let fsItem of fsIterable) {
 				log(`fsItem: Progress = ${(100 * fsIterable.itemIndex / fsIterable.count.all).toFixed(1)}% fsIterable.progress=${inspect(fsIterable.progress)}fsItem='${inspect(fsItem/*.path*/)}'`);//${inspect(fsItem)}`);
 			}
-		});
+		// });
 		log(`Done: Count: ${inspect(fsIterable.count)} Progress=${inspect(fsIterable.progress)}`);
 		assert.equal(fsIterable.count.all, 2);
 	});
@@ -68,25 +70,24 @@ describe("FsIterable instance unit test", function() {
 		await exec(`touch ${testPath}/__testfile__7`);
 		await exec(`touch ${testPath}/__testfile__8`);
 		const fsIterable = new FsIterable({ path: testPath, maxDepth: 4 });
-		await assert.doesNotReject(async() => {
+		// await assert.doesNotReject(async() => {
 			for await (let fsItem of fsIterable) {
 				log(`fsItem: Progress = ${(100 * fsIterable.itemIndex / fsIterable.count.all).toFixed(1)}% fsIterable.progress=${inspect(fsIterable.progress)}fsItem='${inspect(fsItem/*.path*/)}'`);//${inspect(fsItem)}`);
 				await new Promise(resolve => setTimeout(resolve, 50));
 			}
-		});
+		// });
 		log(`Done: Count: ${inspect(fsIterable.count)} Progress=${inspect(fsIterable.progress)}`);
 		assert.equal(fsIterable.count.all, 9);
 	});
 
 	it('should handle a large filesystem walk and use concurrency', async function walkLargeFs() {
 		const fsIterable = new FsIterable({ path: largeFsWalkPath, maxDepth: 4, concurrency: 4 });
-		await assert.doesNotReject(async() => {
+		// await assert.doesNotReject(async() => {
 			for await (let fsItem of fsIterable) {
 				log(`fsItem: Progress = ${(100 * fsIterable.itemIndex / fsIterable.count.all).toFixed(1)}% fsIterable.progress=${inspect(fsIterable.progress)}fsItem='${inspect(fsItem/*.path*/)}'`);//${inspect(fsItem)}`);
 				await new Promise(resolve => setTimeout(resolve, 100));
 			}
-		});
-
+		// });
 	});
 
 	process.once('SIGINT', onSigInt);
