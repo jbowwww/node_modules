@@ -74,7 +74,8 @@ describe("FsIterable instance unit test", function() {
 		// await assert.doesNotReject(async() => {
 			for await (let fsItem of fsIterable) {
 				log(`fsItem: Progress = ${(100 * fsIterable.itemIndex / fsIterable.count.all).toFixed(1)}% fsIterable.progress=${inspect(fsIterable.progress)}fsItem='${inspect(fsItem/*.path*/)}'`);//${inspect(fsItem)}`);
-				await new Promise(resolve => setTimeout(resolve, 50));
+				// simulate doing some processing with the file
+				await new Promise(resolve => setTimeout(resolve, 150));
 			}
 		// });
 		log(`Done: Count: ${inspect(fsIterable.count)} Progress=${inspect(fsIterable.progress)}`);

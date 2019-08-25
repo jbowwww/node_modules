@@ -1,0 +1,689 @@
+
+> @jbowwww/fs-iterable@1.0.0 test /home/jk/code/modules/FsIterable
+> mocha test/index.js
+
+  mocha:cli:options no config found in /home/jk/code/modules/FsIterable/package.json +0ms
+  mocha:cli:options No mocha.opts found at ./test/mocha.opts +1ms
+  mocha:cli:mocha loaded opts { _: [ 'test/index.js' ],
+  diff: true,
+  config: false,
+  package: false,
+  opts: false,
+  extension: [ 'js' ],
+  'watch-extensions': [ 'js' ],
+  reporter: 'spec',
+  R: 'spec',
+  slow: 75,
+  s: 75,
+  timeout: 2000,
+  t: 2000,
+  timeouts: 2000,
+  ui: 'bdd',
+  u: 'bdd' } +0ms
+  mocha:cli:cli entered main with raw args [ 'test/index.js',
+  '--diff',
+  '--no-config',
+  '--no-package',
+  '--no-opts',
+  '--extension',
+  'js',
+  '--reporter',
+  'spec',
+  '--slow',
+  '75',
+  '--timeout',
+  '2000',
+  '--ui',
+  'bdd' ] +0ms
+  mocha:cli:run post-yargs config { _: [],
+  diff: true,
+  config: false,
+  package: [Getter/Setter],
+  opts: [Getter/Setter],
+  extension: [ 'js' ],
+  'watch-extensions': [ 'js' ],
+  watchExtensions: [ 'js' ],
+  reporter: 'spec',
+  R: 'spec',
+  slow: '75',
+  s: '75',
+  timeout: '2000',
+  t: '2000',
+  timeouts: '2000',
+  ui: 'bdd',
+  u: 'bdd',
+  spec: [ 'test/index.js' ],
+  '$0': 'mocha' } +0ms
+  mocha:suite bail undefined +0ms
+  mocha:suite slow 75 +1ms
+  mocha:suite timeout 2000 +0ms
+  mocha:cli:run:helpers files (in order):  [ '/home/jk/code/modules/FsIterable/test/index.js' ] +0ms
+  mocha:cli:run:helpers running tests with files [ '/home/jk/code/modules/FsIterable/test/index.js' ] +0ms
+  mocha:suite timeout 2000 +29ms
+  mocha:suite retries -1 +0ms
+  mocha:suite enableTimeouts true +0ms
+  mocha:suite slow 75 +0ms
+  mocha:suite bail undefined +0ms
+  test/FsIterable FsIterable unit tests setup: testPath='/home/jk/code/modules/FsIterable/test/__testdata__'
+  test/FsIterable 
+  test/FsIterable assert={ [Function: ok]
+  fail: [Function: fail],
+  AssertionError: [Function: AssertionError],
+  ok: [Circular],
+  equal: [Function: equal],
+  notEqual: [Function: notEqual],
+  deepEqual: [Function: deepEqual],
+  notDeepEqual: [Function: notDeepEqual],
+  deepStrictEqual: [Function: deepStrictEqual],
+  notDeepStrictEqual: [Function: notDeepStrictEqual],
+  strictEqual: [Function: strictEqual],
+  notStrictEqual: [Function: notStrictEqual],
+  throws: [Function: throws],
+  rejects: [AsyncFunction: rejects],
+  doesNotThrow: [Function: doesNotThrow],
+  doesNotReject: [AsyncFunction: doesNotReject],
+  ifError: [Function: ifError],
+  strict:
+   { [Function: strict]
+     fail: [Function: fail],
+     AssertionError: [Function: AssertionError],
+     ok: [Circular],
+     equal: [Function: strictEqual],
+     notEqual: [Function: notStrictEqual],
+     deepEqual: [Function: deepStrictEqual],
+     notDeepEqual: [Function: notDeepStrictEqual],
+     deepStrictEqual: [Function: deepStrictEqual],
+     notDeepStrictEqual: [Function: notDeepStrictEqual],
+     strictEqual: [Function: strictEqual],
+     notStrictEqual: [Function: notStrictEqual],
+     throws: [Function: throws],
+     rejects: [AsyncFunction: rejects],
+     doesNotThrow: [Function: doesNotThrow],
+     doesNotReject: [AsyncFunction: doesNotReject],
+     ifError: [Function: ifError],
+     strict: [Circular] } }
+  test/FsIterable 
+  test/FsIterable  +0ms
+  mocha:runnable timeout 2000 +0ms
+  mocha:runnable enableTimeouts true +0ms
+  mocha:runnable slow 75 +0ms
+  mocha:runnable timeout 2000 +0ms
+  mocha:runnable enableTimeouts true +0ms
+  mocha:runnable slow 75 +0ms
+  mocha:runnable timeout 2000 +0ms
+  mocha:runnable enableTimeouts true +0ms
+  mocha:runnable slow 75 +0ms
+  mocha:runnable timeout 2000 +0ms
+  mocha:runnable enableTimeouts true +0ms
+  mocha:runnable slow 75 +0ms
+  mocha:runnable timeout 2000 +1ms
+  mocha:runnable enableTimeouts true +0ms
+  mocha:runnable slow 75 +0ms
+  mocha:runnable timeout 2000 +0ms
+  mocha:runnable enableTimeouts true +0ms
+  mocha:runnable slow 75 +0ms
+  mocha:runner grep /.*/ +0ms
+  mocha:runner globals ["global","process","Buffer","clearImmediate","clearInterval","clearTimeout","setImmediate","setInterval","setTimeout","before","after","beforeEach","afterEach","run","context","describe","xcontext","xdescribe","specify","it","xspecify","xit","XMLHttpRequest","Date"] +0ms
+  mocha:runner globals [] +1ms
+  mocha:runner start +0ms
+
+  mocha:runner run suite  +1ms
+
+  mocha:runner run suite FsIterable instance unit test +1ms
+  FsIterable instance unit test
+  FsIterable FsIter({
+  FsIterable   path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  FsIterable   maxDepth: 1,
+  FsIterable   concurrency: 1,
+  FsIterable   filter: [Function: filter],
+  FsIterable   handleError: [Function: handleError]
+  FsIterable }) +0ms
+    ✓ should be of type FsIterable with count and progress properties
+  FsIterable FsIter({
+  FsIterable   path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  FsIterable   maxDepth: 1,
+  FsIterable   concurrency: 1,
+  FsIterable   filter: [Function: filter],
+  FsIterable   handleError: [Function: handleError]
+  FsIterable }) +8ms
+  FsIterable asyncIterator! this=FsIterable {
+  FsIterable   errors: [],
+  FsIterable   items: {},
+  FsIterable   itemIndex: 0,
+  FsIterable   options:
+  FsIterable    { path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  FsIterable      maxDepth: 1,
+  FsIterable      concurrency: 1,
+  FsIterable      filter: [Function: filter],
+  FsIterable      handleError: [Function: handleError] },
+  FsIterable   count: { file: 0, dir: 0, unknown: 0, all: 0, doneCounting: false },
+  FsIterable   progress:
+  FsIterable    { total: 0,
+  FsIterable   current: 0,
+  FsIterable   progress: '0%',
+  FsIterable   done: false,
+  FsIterable   doneCounting: false },
+  FsIterable   _fsIterateInnerCalls: 0,
+  FsIterable   _rootPathDepth: 8,
+  FsIterable   [Symbol(Symbol.asyncIterator)]: [AsyncGeneratorFunction] } +3ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__'): this.count={ file: 0, dir: 1, unknown: 0, all: 1, doneCounting: false } +1ms
+  FsIterable item: dir: '/home/jk/code/modules/FsIterable/test/__testdata__' +0ms
+  FsIterable limitFsIter newItem: dir: currentDepth=0 '/home/jk/code/modules/FsIterable/test/__testdata__' +0ms
+  FsIterable 0 entries, 0 matching filter at depth=0 in dir:/home/jk/code/modules/FsIterable/test/__testdata__, progress={ total: 1,
+  current: 1,
+  progress: '100%',
+  done: false,
+  doneCounting: false } +0ms
+    ✓ should be async iterable
+  FsIterable FsIter({
+  FsIterable   path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  FsIterable   maxDepth: 1,
+  FsIterable   concurrency: 1,
+  FsIterable   filter: [Function: filter],
+  FsIterable   handleError: [Function: handleError]
+  FsIterable }) +6ms
+  FsIterable asyncIterator! this=FsIterable {
+  FsIterable   errors: [],
+  FsIterable   items: {},
+  FsIterable   itemIndex: 0,
+  FsIterable   options:
+  FsIterable    { path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  FsIterable      maxDepth: 1,
+  FsIterable      concurrency: 1,
+  FsIterable      filter: [Function: filter],
+  FsIterable      handleError: [Function: handleError] },
+  FsIterable   count: { file: 0, dir: 0, unknown: 0, all: 0, doneCounting: false },
+  FsIterable   progress:
+  FsIterable    { total: 0,
+  FsIterable   current: 0,
+  FsIterable   progress: '0%',
+  FsIterable   done: false,
+  FsIterable   doneCounting: false },
+  FsIterable   _fsIterateInnerCalls: 0,
+  FsIterable   _rootPathDepth: 8,
+  FsIterable   [Symbol(Symbol.asyncIterator)]: [AsyncGeneratorFunction] } +1ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__'): this.count={ file: 0, dir: 1, unknown: 0, all: 1, doneCounting: false } +1ms
+  FsIterable item: dir: '/home/jk/code/modules/FsIterable/test/__testdata__' +0ms
+  test/FsIterable fsItem: Progress = 0.0% fsIterable.progress={ total: 1,
+  test/FsIterable   current: 0,
+  test/FsIterable   progress: '0%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 16893,
+  test/FsIterable      nlink: 2,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4849666,
+  test/FsIterable      size: 4096,
+  test/FsIterable      blocks: 8,
+  test/FsIterable      atimeMs: 1566726742807.2695,
+  test/FsIterable      mtimeMs: 1566726742807.2695,
+  test/FsIterable      ctimeMs: 1566726742807.2695,
+  test/FsIterable      birthtimeMs: 1566726742807.2695,
+  test/FsIterable      atime: 2019-08-25T09:52:22.807Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.807Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.807Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.807Z },
+  test/FsIterable   fileType: 'dir',
+  test/FsIterable   pathDepth: 8,
+  test/FsIterable   extension: '' }' +39ms
+  FsIterable limitFsIter newItem: dir: currentDepth=0 '/home/jk/code/modules/FsIterable/test/__testdata__' +1ms
+  FsIterable 0 entries, 0 matching filter at depth=0 in dir:/home/jk/code/modules/FsIterable/test/__testdata__, progress={ total: 1,
+  current: 1,
+  progress: '100%',
+  done: false,
+  doneCounting: false } +0ms
+  test/FsIterable Done: Count: { file: 0, dir: 1, unknown: 0, all: 1, doneCounting: true } Progress={ total: 1,
+  test/FsIterable   current: 1,
+  test/FsIterable   progress: '100%',
+  test/FsIterable   done: true,
+  test/FsIterable   doneCounting: true } +1ms
+    ✓ should yield 1 items for an empty directory walk
+  FsIterable FsIter({
+  FsIterable   path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  FsIterable   maxDepth: 4,
+  FsIterable   concurrency: 1,
+  FsIterable   filter: [Function: filter],
+  FsIterable   handleError: [Function: handleError]
+  FsIterable }) +12ms
+  FsIterable asyncIterator! this=FsIterable {
+  FsIterable   errors: [],
+  FsIterable   items: {},
+  FsIterable   itemIndex: 0,
+  FsIterable   options:
+  FsIterable    { path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  FsIterable      maxDepth: 4,
+  FsIterable      concurrency: 1,
+  FsIterable      filter: [Function: filter],
+  FsIterable      handleError: [Function: handleError] },
+  FsIterable   count: { file: 0, dir: 0, unknown: 0, all: 0, doneCounting: false },
+  FsIterable   progress:
+  FsIterable    { total: 0,
+  FsIterable   current: 0,
+  FsIterable   progress: '0%',
+  FsIterable   done: false,
+  FsIterable   doneCounting: false },
+  FsIterable   _fsIterateInnerCalls: 0,
+  FsIterable   _rootPathDepth: 8,
+  FsIterable   [Symbol(Symbol.asyncIterator)]: [AsyncGeneratorFunction] } +0ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__'): this.count={ file: 0, dir: 1, unknown: 0, all: 1, doneCounting: false } +0ms
+  FsIterable item: dir: '/home/jk/code/modules/FsIterable/test/__testdata__' +0ms
+  test/FsIterable fsItem: Progress = 0.0% fsIterable.progress={ total: 1,
+  test/FsIterable   current: 0,
+  test/FsIterable   progress: '0%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 16893,
+  test/FsIterable      nlink: 2,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4849666,
+  test/FsIterable      size: 4096,
+  test/FsIterable      blocks: 8,
+  test/FsIterable      atimeMs: 1566726742815.2695,
+  test/FsIterable      mtimeMs: 1566726742821.2693,
+  test/FsIterable      ctimeMs: 1566726742821.2693,
+  test/FsIterable      birthtimeMs: 1566726742821.2693,
+  test/FsIterable      atime: 2019-08-25T09:52:22.815Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.821Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.821Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.821Z },
+  test/FsIterable   fileType: 'dir',
+  test/FsIterable   pathDepth: 8,
+  test/FsIterable   extension: '' }' +13ms
+  FsIterable limitFsIter newItem: dir: currentDepth=0 '/home/jk/code/modules/FsIterable/test/__testdata__' +1ms
+  FsIterable 1 entries, 1 matching filter at depth=0 in dir:/home/jk/code/modules/FsIterable/test/__testdata__, progress={ total: 1,
+  current: 1,
+  progress: '100%',
+  done: false,
+  doneCounting: false } +1ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__'): this.count={ file: 1, dir: 1, unknown: 0, all: 2, doneCounting: false } +1ms
+  FsIterable item: file: '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__' +0ms
+  test/FsIterable fsItem: Progress = 50.0% fsIterable.progress={ total: 2,
+  test/FsIterable   current: 1,
+  test/FsIterable   progress: '50%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path:
+  test/FsIterable    '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 33204,
+  test/FsIterable      nlink: 1,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4850071,
+  test/FsIterable      size: 0,
+  test/FsIterable      blocks: 0,
+  test/FsIterable      atimeMs: 1566726742821.2693,
+  test/FsIterable      mtimeMs: 1566726742821.2693,
+  test/FsIterable      ctimeMs: 1566726742821.2693,
+  test/FsIterable      birthtimeMs: 1566726742821.2693,
+  test/FsIterable      atime: 2019-08-25T09:52:22.821Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.821Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.821Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.821Z },
+  test/FsIterable   fileType: 'file',
+  test/FsIterable   pathDepth: 9,
+  test/FsIterable   extension: '' }' +2ms
+  FsIterable limitFsIter newItem: file: currentDepth=1 '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__' +0ms
+  test/FsIterable Done: Count: { file: 1, dir: 1, unknown: 0, all: 2, doneCounting: true } Progress={ total: 2,
+  test/FsIterable   current: 2,
+  test/FsIterable   progress: '100%',
+  test/FsIterable   done: true,
+  test/FsIterable   doneCounting: true } +0ms
+    ✓ shold yield 2 items for a directory with 1 file walk
+  FsIterable FsIter({
+  FsIterable   path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  FsIterable   maxDepth: 4,
+  FsIterable   concurrency: 1,
+  FsIterable   filter: [Function: filter],
+  FsIterable   handleError: [Function: handleError]
+  FsIterable }) +48ms
+  FsIterable asyncIterator! this=FsIterable {
+  FsIterable   errors: [],
+  FsIterable   items: {},
+  FsIterable   itemIndex: 0,
+  FsIterable   options:
+  FsIterable    { path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  FsIterable      maxDepth: 4,
+  FsIterable      concurrency: 1,
+  FsIterable      filter: [Function: filter],
+  FsIterable      handleError: [Function: handleError] },
+  FsIterable   count: { file: 0, dir: 0, unknown: 0, all: 0, doneCounting: false },
+  FsIterable   progress:
+  FsIterable    { total: 0,
+  FsIterable   current: 0,
+  FsIterable   progress: '0%',
+  FsIterable   done: false,
+  FsIterable   doneCounting: false },
+  FsIterable   _fsIterateInnerCalls: 0,
+  FsIterable   _rootPathDepth: 8,
+  FsIterable   [Symbol(Symbol.asyncIterator)]: [AsyncGeneratorFunction] } +0ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__'): this.count={ file: 0, dir: 1, unknown: 0, all: 1, doneCounting: false } +0ms
+  FsIterable item: dir: '/home/jk/code/modules/FsIterable/test/__testdata__' +0ms
+  test/FsIterable fsItem: Progress = 0.0% fsIterable.progress={ total: 1,
+  test/FsIterable   current: 0,
+  test/FsIterable   progress: '0%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path: '/home/jk/code/modules/FsIterable/test/__testdata__',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 16893,
+  test/FsIterable      nlink: 2,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4849666,
+  test/FsIterable      size: 4096,
+  test/FsIterable      blocks: 8,
+  test/FsIterable      atimeMs: 1566726742831.2693,
+  test/FsIterable      mtimeMs: 1566726742873.2693,
+  test/FsIterable      ctimeMs: 1566726742873.2693,
+  test/FsIterable      birthtimeMs: 1566726742873.2693,
+  test/FsIterable      atime: 2019-08-25T09:52:22.831Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.873Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.873Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.873Z },
+  test/FsIterable   fileType: 'dir',
+  test/FsIterable   pathDepth: 8,
+  test/FsIterable   extension: '' }' +48ms
+  FsIterable limitFsIter newItem: dir: currentDepth=0 '/home/jk/code/modules/FsIterable/test/__testdata__' +152ms
+  FsIterable 8 entries, 8 matching filter at depth=0 in dir:/home/jk/code/modules/FsIterable/test/__testdata__, progress={ total: 1,
+  current: 1,
+  progress: '100%',
+  done: false,
+  doneCounting: false } +0ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__1'): this.count={ file: 1, dir: 1, unknown: 0, all: 2, doneCounting: false } +0ms
+  FsIterable item: file: '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__1' +0ms
+  test/FsIterable fsItem: Progress = 50.0% fsIterable.progress={ total: 2,
+  test/FsIterable   current: 1,
+  test/FsIterable   progress: '50%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path:
+  test/FsIterable    '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__1',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 33204,
+  test/FsIterable      nlink: 1,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4850071,
+  test/FsIterable      size: 0,
+  test/FsIterable      blocks: 0,
+  test/FsIterable      atimeMs: 1566726742834.2693,
+  test/FsIterable      mtimeMs: 1566726742834.2693,
+  test/FsIterable      ctimeMs: 1566726742834.2693,
+  test/FsIterable      birthtimeMs: 1566726742834.2693,
+  test/FsIterable      atime: 2019-08-25T09:52:22.834Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.834Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.834Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.834Z },
+  test/FsIterable   fileType: 'file',
+  test/FsIterable   pathDepth: 9,
+  test/FsIterable   extension: '' }' +153ms
+  FsIterable limitFsIter newItem: file: currentDepth=1 '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__1' +151ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__2'): this.count={ file: 2, dir: 1, unknown: 0, all: 3, doneCounting: false } +1ms
+  FsIterable item: file: '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__2' +0ms
+  test/FsIterable fsItem: Progress = 66.7% fsIterable.progress={ total: 3,
+  test/FsIterable   current: 2,
+  test/FsIterable   progress: '66.66666666666667%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path:
+  test/FsIterable    '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__2',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 33204,
+  test/FsIterable      nlink: 1,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4850289,
+  test/FsIterable      size: 0,
+  test/FsIterable      blocks: 0,
+  test/FsIterable      atimeMs: 1566726742839.2693,
+  test/FsIterable      mtimeMs: 1566726742839.2693,
+  test/FsIterable      ctimeMs: 1566726742839.2693,
+  test/FsIterable      birthtimeMs: 1566726742839.2693,
+  test/FsIterable      atime: 2019-08-25T09:52:22.839Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.839Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.839Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.839Z },
+  test/FsIterable   fileType: 'file',
+  test/FsIterable   pathDepth: 9,
+  test/FsIterable   extension: '' }' +151ms
+  FsIterable limitFsIter newItem: file: currentDepth=1 '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__2' +151ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__3'): this.count={ file: 3, dir: 1, unknown: 0, all: 4, doneCounting: false } +0ms
+  FsIterable item: file: '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__3' +0ms
+  test/FsIterable fsItem: Progress = 75.0% fsIterable.progress={ total: 4,
+  test/FsIterable   current: 3,
+  test/FsIterable   progress: '75%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path:
+  test/FsIterable    '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__3',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 33204,
+  test/FsIterable      nlink: 1,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4850843,
+  test/FsIterable      size: 0,
+  test/FsIterable      blocks: 0,
+  test/FsIterable      atimeMs: 1566726742845.2693,
+  test/FsIterable      mtimeMs: 1566726742845.2693,
+  test/FsIterable      ctimeMs: 1566726742845.2693,
+  test/FsIterable      birthtimeMs: 1566726742845.2693,
+  test/FsIterable      atime: 2019-08-25T09:52:22.845Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.845Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.845Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.845Z },
+  test/FsIterable   fileType: 'file',
+  test/FsIterable   pathDepth: 9,
+  test/FsIterable   extension: '' }' +152ms
+  FsIterable limitFsIter newItem: file: currentDepth=1 '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__3' +151ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__4'): this.count={ file: 4, dir: 1, unknown: 0, all: 5, doneCounting: false } +1ms
+  FsIterable item: file: '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__4' +0ms
+  test/FsIterable fsItem: Progress = 80.0% fsIterable.progress={ total: 5,
+  test/FsIterable   current: 4,
+  test/FsIterable   progress: '80%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path:
+  test/FsIterable    '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__4',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 33204,
+  test/FsIterable      nlink: 1,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4851617,
+  test/FsIterable      size: 0,
+  test/FsIterable      blocks: 0,
+  test/FsIterable      atimeMs: 1566726742852.2693,
+  test/FsIterable      mtimeMs: 1566726742852.2693,
+  test/FsIterable      ctimeMs: 1566726742852.2693,
+  test/FsIterable      birthtimeMs: 1566726742852.2693,
+  test/FsIterable      atime: 2019-08-25T09:52:22.852Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.852Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.852Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.852Z },
+  test/FsIterable   fileType: 'file',
+  test/FsIterable   pathDepth: 9,
+  test/FsIterable   extension: '' }' +151ms
+  FsIterable limitFsIter newItem: file: currentDepth=1 '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__4' +151ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__5'): this.count={ file: 5, dir: 1, unknown: 0, all: 6, doneCounting: false } +0ms
+  FsIterable item: file: '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__5' +0ms
+  test/FsIterable fsItem: Progress = 83.3% fsIterable.progress={ total: 6,
+  test/FsIterable   current: 5,
+  test/FsIterable   progress: '83.33333333333333%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path:
+  test/FsIterable    '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__5',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 33204,
+  test/FsIterable      nlink: 1,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4851622,
+  test/FsIterable      size: 0,
+  test/FsIterable      blocks: 0,
+  test/FsIterable      atimeMs: 1566726742857.2693,
+  test/FsIterable      mtimeMs: 1566726742857.2693,
+  test/FsIterable      ctimeMs: 1566726742857.2693,
+  test/FsIterable      birthtimeMs: 1566726742857.2693,
+  test/FsIterable      atime: 2019-08-25T09:52:22.857Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.857Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.857Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.857Z },
+  test/FsIterable   fileType: 'file',
+  test/FsIterable   pathDepth: 9,
+  test/FsIterable   extension: '' }' +152ms
+  FsIterable limitFsIter newItem: file: currentDepth=1 '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__5' +151ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__6'): this.count={ file: 6, dir: 1, unknown: 0, all: 7, doneCounting: false } +1ms
+  FsIterable item: file: '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__6' +0ms
+  test/FsIterable fsItem: Progress = 85.7% fsIterable.progress={ total: 7,
+  test/FsIterable   current: 6,
+  test/FsIterable   progress: '85.71428571428571%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path:
+  test/FsIterable    '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__6',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 33204,
+  test/FsIterable      nlink: 1,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4851630,
+  test/FsIterable      size: 0,
+  test/FsIterable      blocks: 0,
+  test/FsIterable      atimeMs: 1566726742863.2693,
+  test/FsIterable      mtimeMs: 1566726742863.2693,
+  test/FsIterable      ctimeMs: 1566726742863.2693,
+  test/FsIterable      birthtimeMs: 1566726742863.2693,
+  test/FsIterable      atime: 2019-08-25T09:52:22.863Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.863Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.863Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.863Z },
+  test/FsIterable   fileType: 'file',
+  test/FsIterable   pathDepth: 9,
+  test/FsIterable   extension: '' }' +151ms
+  FsIterable limitFsIter newItem: file: currentDepth=1 '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__6' +151ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__7'): this.count={ file: 7, dir: 1, unknown: 0, all: 8, doneCounting: false } +0ms
+  FsIterable item: file: '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__7' +0ms
+  test/FsIterable fsItem: Progress = 87.5% fsIterable.progress={ total: 8,
+  test/FsIterable   current: 7,
+  test/FsIterable   progress: '87.5%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path:
+  test/FsIterable    '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__7',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 33204,
+  test/FsIterable      nlink: 1,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4851872,
+  test/FsIterable      size: 0,
+  test/FsIterable      blocks: 0,
+  test/FsIterable      atimeMs: 1566726742869.2693,
+  test/FsIterable      mtimeMs: 1566726742869.2693,
+  test/FsIterable      ctimeMs: 1566726742869.2693,
+  test/FsIterable      birthtimeMs: 1566726742869.2693,
+  test/FsIterable      atime: 2019-08-25T09:52:22.869Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.869Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.869Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.869Z },
+  test/FsIterable   fileType: 'file',
+  test/FsIterable   pathDepth: 9,
+  test/FsIterable   extension: '' }' +152ms
+  FsIterable limitFsIter newItem: file: currentDepth=1 '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__7' +150ms
+  FsIterable createItem('/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__8'): this.count={ file: 8, dir: 1, unknown: 0, all: 9, doneCounting: false } +1ms
+  FsIterable item: file: '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__8' +0ms
+  test/FsIterable fsItem: Progress = 88.9% fsIterable.progress={ total: 9,
+  test/FsIterable   current: 8,
+  test/FsIterable   progress: '88.88888888888889%',
+  test/FsIterable   done: false,
+  test/FsIterable   doneCounting: false }fsItem='{ path:
+  test/FsIterable    '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__8',
+  test/FsIterable   stats:
+  test/FsIterable    Stats {
+  test/FsIterable      dev: 64768,
+  test/FsIterable      mode: 33204,
+  test/FsIterable      nlink: 1,
+  test/FsIterable      uid: 1000,
+  test/FsIterable      gid: 1000,
+  test/FsIterable      rdev: 0,
+  test/FsIterable      blksize: 4096,
+  test/FsIterable      ino: 4851961,
+  test/FsIterable      size: 0,
+  test/FsIterable      blocks: 0,
+  test/FsIterable      atimeMs: 1566726742873.2693,
+  test/FsIterable      mtimeMs: 1566726742873.2693,
+  test/FsIterable      ctimeMs: 1566726742873.2693,
+  test/FsIterable      birthtimeMs: 1566726742873.2693,
+  test/FsIterable      atime: 2019-08-25T09:52:22.873Z,
+  test/FsIterable      mtime: 2019-08-25T09:52:22.873Z,
+  test/FsIterable      ctime: 2019-08-25T09:52:22.873Z,
+  test/FsIterable      birthtime: 2019-08-25T09:52:22.873Z },
+  test/FsIterable   fileType: 'file',
+  test/FsIterable   pathDepth: 9,
+  test/FsIterable   extension: '' }' +150ms
+  FsIterable limitFsIter newItem: file: currentDepth=1 '/home/jk/code/modules/FsIterable/test/__testdata__/__testfile__8' +151ms
+  test/FsIterable Done: Count: { file: 8, dir: 1, unknown: 0, all: 9, doneCounting: true } Progress={ total: 9,
+  test/FsIterable   current: 9,
+  test/FsIterable   progress: '100%',
+  test/FsIterable   done: true,
+  test/FsIterable   doneCounting: true } +151ms
+    ✓ shold yield 9 items for a directory with 8 file walk (1405ms)
+
+  mocha:runner finished running +1s
+
+  5 passing (1s)
+
+  mocha:runner end +0ms
+
+
+   ╭────────────────────────────────────────────────────────────────╮
+   │                                                                │
+   │       New minor version of npm available! 6.4.1 → 6.11.2       │
+   │   Changelog: https://github.com/npm/cli/releases/tag/v6.11.2   │
+   │               Run npm install -g npm to update!                │
+   │                                                                │
+   ╰────────────────────────────────────────────────────────────────╯
+
+jk@lounge:~/code/modules/FsIterable$ 
