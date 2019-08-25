@@ -3,9 +3,11 @@ const inspect = require('util').inspect;
 const _ = require('lodash');
 
 module.exports = {
+
 	assignDefaults(target, defaults = {}) {
 		return target = _.defaults(target, defaults);
 	},
+	
 	inspect: Object.assign(require('util').inspect, {
 		withGetters(obj, ...objectMaps) {
 			// const wrapped = _.assign({}, obj);
@@ -27,5 +29,12 @@ module.exports = {
 			});
 		}
 	}),
-	promisify: require('util').promisify
+	
+	promisify: require('util').promisify,
+	promisifyObject(o) { 
+		return Object.keys(o).reduce((a, k) => Object.defineProperty(a, k, { writeable: true,
+			enumerable: true,
+			value: o[k] instanceof Function ? this.promisify(o[k]) : o[k]
+		}), {});
+	}
 };
