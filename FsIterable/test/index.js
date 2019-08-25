@@ -9,12 +9,13 @@ const { exec } = ({ exec: promisify(require('child_process').exec) });
 const FsIterable = require('../index.js');
 const log = require('debug')('test/FsIterable');//.extend('log');// log.log = (innerLog => ((...args) => (innerLog('prefix', ...args))))(console.log.bind(console));
 
-describe("FsIterable instance unit test", function() {
 
 	const exePath = nodePath.dirname(__filename);
 	const testPath = nodePath.join(exePath, './__testdata__');
-	const largeFsWalkPath = '/mnt/Stor2/mystuff/incoming'
+	const largeFsWalkPath = '/mnt/Stor2/mystuff/incoming';
 	let fsIterable;
+	
+describe("FsIterable instance unit test", function() {
 
 	log('FsIterable unit tests setup: testPath=\'%s\'\n\nassert=%s\n\n', testPath, inspect(assert));
 
@@ -80,15 +81,18 @@ describe("FsIterable instance unit test", function() {
 		assert.equal(fsIterable.count.all, 9);
 	});
 
-	it('should handle a large filesystem walk and use concurrency', async function walkLargeFs() {
-		const fsIterable = new FsIterable({ path: largeFsWalkPath, maxDepth: 4, concurrency: 4 });
-		// await assert.doesNotReject(async() => {
-			for await (let fsItem of fsIterable) {
-				log(`fsItem: Progress = ${(100 * fsIterable.itemIndex / fsIterable.count.all).toFixed(1)}% fsIterable.progress=${inspect(fsIterable.progress)}fsItem='${inspect(fsItem/*.path*/)}'`);//${inspect(fsItem)}`);
-				await new Promise(resolve => setTimeout(resolve, 100));
-			}
-		// });
-	});
+// 	it('should handle a large filesystem walk and use concurrency', async function walkLargeFs() {
+// 		const fsIterable = new FsIterable({ path: largeFsWalkPath, maxDepth: 4, concurrency: 4 });
+// 		// await assert.doesNotReject(async() => {
+// 			for await (let fsItem of fsIterable) {
+// 				log(`fsItem: Progress = ${(100 * fsIterable.itemIndex / fsIterable.count.all).toFixed(1)}% fsIterable.progress=${inspect(fsIterable.progress)}fsItem='${inspect(fsItem/*.path*/)}'`);//${inspect(fsItem)}`);
+// 				await new Promise(resolve => setTimeout(resolve, 100));
+// 			}
+// 		// });
+// 	});
+
+});
+
 
 	process.once('SIGINT', onSigInt);
 	function onSigInt() {
@@ -102,5 +106,3 @@ describe("FsIterable instance unit test", function() {
 			process.nextTick(() => process.exit(0));
 		}
 	}
-
-});
