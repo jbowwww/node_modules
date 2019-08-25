@@ -1,7 +1,7 @@
 
 const obj /*{ assignDefaults, inspect, promisify }*/ = require('../obj');
 const inspect = obj.inspect;
-const log = require('debug')('test/Queue');
+const log = require('debug')('Queue');
 const util = require('util');
 const { EventEmitter } = require('events');
 
