@@ -1,10 +1,6 @@
 "use strict";
-
-const obj /*{ assignDefaults, inspect, promisify }*/ = require('../obj');
-const inspect = obj.inspect;
-const promisifyObject = o => Object.keys(o).reduce((a, k) =>
-	Object.defineProperty(a, k, { writeable: true, enumerable: true, value: o[k] instanceof Function ? obj.promisify(o[k]) : o[k] }), {});
-const nodeFs = promisifyObject(require('fs'));
+const obj = require('../obj');
+const nodeFs = obj.promisifyObject(require('fs'));
 const nodePath = require('path');
 const Limit = require('../Limit');
 const stream = new require('stream');
@@ -15,7 +11,7 @@ log.info = log.extend('info');
 log.warn = log.extend('warn');
 
 module.exports = FsIterable;
-
+// export default class FsIterable
 function FsIterable(options) {
 	if (!(this instanceof FsIterable)) {
 		return new FsIterable(options);
@@ -60,7 +56,7 @@ function FsIterable(options) {
 		// const innerIter = limitFsIter(this.options.path);
 		this[Symbol.asyncIterator] = async function* () {
 			this.itemIndex = 0;
-			log(`asyncIterator! this=${inspect(this)}`);
+			log(`asyncIterator! this=${obj.inspect(this)}`);
 			for await(const item of /*Array.from*/(fsIterateInner(this.options.path))) {
 				log(`item: ${item.fileType}: '${item.path}'`);
 				yield item;
@@ -81,7 +77,7 @@ function FsIterable(options) {
 				const paths = names
 					.filter(fsIterable.options.filter || (() => true))
 					.map(name => nodePath.join(item.path, name));
-				log('%d entries, %d matching filter at depth=%d in dir:%s, progress=%s', names.length, paths.length, currentDepth, item.path, inspect(fsIterable.progress));
+				log('%d entries, %d matching filter at depth=%d in dir:%s, progress=%s', names.length, paths.length, currentDepth, item.path, obj.inspect(fsIterable.progress));
 				// for (const newPath of paths) {
 					// for (const newItem of 
 					for (const newInner of paths.map(path => fsIterateInner(path))) {
@@ -112,7 +108,7 @@ function FsIterable(options) {
 			}
 		});
 		fsIterable.count[item.fileType]++;
-		log('createItem(\'%s\'): this.count=%s', path, inspect(fsIterable.count));
+		log('createItem(\'%s\'): this.count=%s', path, obj.inspect(fsIterable.count));
 		return item;
 	}
 }
