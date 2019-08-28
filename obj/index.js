@@ -4,6 +4,10 @@ const _ = require('lodash');
 
 module.exports = {
 
+	isArray(obj) {
+		return _.isArray(obj);
+	},
+
 	assignDefaults(target, defaults = {}) {
 		return target = _.defaults(target, defaults);
 	},
