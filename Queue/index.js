@@ -10,9 +10,12 @@ module.exports = Queue;
 util.inherits(Queue, EventEmitter);
 Queue.prototype.constructor = Queue;
 
-function Queue(options = { concurrency: 1 }) {
+function Queue(options = {}) {
+	options = obj.assignDefaults(
+		typeof options === 'number' ? { concurrency: options } : options,
+		{ concurrency: 1 });
 	if (!(this instanceof Queue)) {
-		return new Queue(concurrency);
+		return new Queue(options);
 	}
 	EventEmitter.call(this);
 	this.queue = [];
@@ -22,7 +25,7 @@ function Queue(options = { concurrency: 1 }) {
 	this.runCount = 0;
 	this.successCount = 0;
 	this.errors = [];
-	this.concurrency = typeof options === 'number' ? options : options.concurrency;
+	this.concurrency = options.concurrency;
 	// return obj.inspect.withGetters(this);
 }
 
@@ -90,16 +93,16 @@ function _run(fn, ...args)  {
 // has been reached, returns a Promise that resolves when one of the currently executing functions finishes.
 // TODO: ^ think that through, i'm not sure its quite what you want
 Queue.prototype.add = Queue.prototype.enqueue = function add(fn, ...args) {
-	// const queue = queue;
 	if (this.activeCount < this.concurrency) { 
-		_run.call(this, fn, ...args);
-		return Promise.resolve();
+		return _run.call(this, fn, ...args);
 	} else {
 		log(`Queueing task : ${inspect(this)}`);
-		this.queue.push(() => _run.call(this, fn, ...args));
-		if (this.queue.length > this.maxQueueCount)
-			this.maxQueueCount = this.queue.length;
-		return new Promise((resolve, reject) => this.once('next', () => resolve()));
+		return new Promise((resolve, reject) => {
+			this.queue.push(() => _run.call(this, fn, ...args).then(r => resolve(r)));
+			if (this.queue.length > this.maxQueueCount)
+				this.maxQueueCount = this.queue.length;
+		});
+			// return new Promise((resolve, reject) => this.once('next', () => resolve()));
 	}
 };
 
@@ -136,3 +139,28 @@ Queue.prototype.onIdle = function onIdle() {
 		});
 	});
 };
+
+// // TODO: A queue-based buffer for iterables with given concurrency
+// Queue.Iterable(iterable, options = {}) {
+// 	options = obj.assignDefaults(
+// 		typeof options === 'number' ? { concurrency: options.concurrency } : options,
+// 		{ concurrency: 1 });
+// 	const q = new Queue(options);
+// 	return function* QueueIterable() {
+// 		let done = false;
+// 		let pending = 0;
+// 		while (!done) {
+// 			// TODO: convert asyncIterable to iterable?
+// 			for (const i of iterable) {//while (!done && pending.length <= options.concurrency) {
+// 				const i = iterable.next();
+// 				pending.push(i);
+// 				q.add(i);
+// 			}
+
+// 		}
+// 		console.log(`QueueWrap: await q.onIdle`);
+// 		await q.onIdle();
+// 		console.log(`QueueWrap: end`);
+// 	}
+// }
+
