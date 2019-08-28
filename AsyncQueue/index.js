@@ -1,4 +1,5 @@
-export class ArrayQueue extends Array {
+
+class ArrayQueue extends Array {
     enqueue(value) {
         // Add at the end
         return this.push(value);
@@ -7,12 +8,13 @@ export class ArrayQueue extends Array {
         // Remove first element
         return this.shift();
     }
-}
+};
+
 /**
  * @returns a Promise for an Array with the elements
  * in `asyncIterable`
  */
-export async function takeAsync(asyncIterable, count=Infinity) {
+async function takeAsync(asyncIterable, count=Infinity) {
     const result = [];
     const iterator = asyncIterable[Symbol.asyncIterator]();
     while (result.length < count) {
@@ -21,8 +23,9 @@ export async function takeAsync(asyncIterable, count=Infinity) {
         result.push(value);
     }
     return result;
-}
-export class AsyncQueue {
+};
+
+class AsyncQueue {
     constructor() {
         // enqueues > dequeues
         this._values = new ArrayQueue();
@@ -81,3 +84,9 @@ export class AsyncQueue {
         this._closed = true;
     }
 }
+
+module.exports = {
+    ArrayQueue,
+    ArrayQueue,
+    takeAsync
+};
