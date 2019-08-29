@@ -5,19 +5,20 @@ const inspect = obj.inspect;
 
 module.exports = Limit;
 
-function Limit(func, concurrency = 1) {
-	async function limitedFunction(...args) {
+function Limit(fn, { concurrency } = { concurrency: 1 }) {
+	const limitedFunction = async function(...args) {
 		while (limitedFunction.pending.length >= concurrency) {
 		    await Promise.race(limitedFunction.pending).catch(() => {});
 		}
-
-	    const p = func.apply(this, args);
+	    const p = fn.apply(this, args);
 		limitedFunction.pending.push(p);
 		await p.catch(() => {});
 		limitedFunction.pending = limitedFunction.pending.filter(pending => pending !== p);
 		return p;
   	};
-  	limitedFunction.pending = [];
-  	Object.defineProperty(limitedFunction, 'allCompleted', { get: () => Promise.all(limitedFunction.pending) });
-  	return limitedFunction;
+  	return Object.defineProperties(limitedFunction, {
+  		name: { value: (fn.name || 'anonFunc') + '_limited' },
+  		pending: { value: [] },
+  		allCompleted: { get: () => Promise.all(limitedFunction.pending) }
+  	});
 }

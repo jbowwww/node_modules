@@ -90,7 +90,7 @@ class FsIterable {
 					return (n < 0 || (n2 > 0 && n2 > n)) ? '' : this.path.slice(n + 1);
 				}
 			});
-			log('createItem(\'%s\'): _this.count=%s', path, obj.inspect(_this.count));
+			log('createItem(\'%s\'): _this.count=%s', path, obj.inspect(_this.count, { compact: true }));
 			_this.count[item.fileType]++;
 			return item;
 		}
