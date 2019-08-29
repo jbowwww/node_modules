@@ -94,7 +94,8 @@ function _run(fn, ...args)  {
 // TODO: ^ think that through, i'm not sure its quite what you want
 Queue.prototype.add = Queue.prototype.enqueue = function add(fn, ...args) {
 	if (this.activeCount < this.concurrency) { 
-		return _run.call(this, fn, ...args);
+		_run.call(this, fn, ...args);
+		return Promise.resolve();
 	} else {
 		log(`Queueing task : ${inspect(this)}`);
 		return new Promise((resolve, reject) => {

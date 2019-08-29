@@ -13,9 +13,8 @@ describe("Queue instance unit test", function() {
 	beforeEach('create fsIterable', async function createFsIterable() { });
 
 	it('should fulfill a promise when done, if 100 tasks were enqueued, 100 should have completed - in order, with maxActiveCount==4', async function() { 
-		const concurrency = 2;
+		const concurrency = 8;
 		const q = new Queue({ concurrency });
-		await assert.doesNotReject(async() => {
 			let fails = [];
 			let lastValue;
 			log(`Start: `);
@@ -31,7 +30,7 @@ describe("Queue instance unit test", function() {
 						if (lastValue && r <= lastValue) {
 							throw new Error(`r=${r} <= lastValue=${lastValue}`);
 						}
-						if (q.maxActiveCount > 4) {
+						if (q.maxActiveCount > concurrency) {
 							throw new Error(`q.maxActiveCount=${q.maxActiveCount} > 4, at i=${i}`);
 						}
 						log(`task(${i}) enqueue result=${inspect(r)}: q=${inspect(q)}`);
@@ -50,7 +49,6 @@ describe("Queue instance unit test", function() {
 			}
 			log(`Done: ${inspect(q)}`);
 			assert.equal(q.successCount, 100);
-		});
 	});
 
 	process.once('SIGINT', function onSigInt() {
