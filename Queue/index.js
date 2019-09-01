@@ -29,6 +29,26 @@ function Queue(options = {}) {
 	// return obj.inspect.withGetters(this);
 }
 
+Queue.wrap = async function QueueWrap(iterable, options, iteratorFn) {
+	options = obj.assignDefaults(
+		typeof options === 'number' ? { concurrency: options } : options,
+		{ concurrency: 1 });
+	const q = new Queue(options);
+	log(`QueueWrap: iterable=${inspect(iterable)} q=${inspect(q)}`);
+	if (typeof iterable[Symbol.asyncIterator] !== 'function') {
+		for (const i of iterable) {
+			await q.add(iteratorFn.bind(iterable, i));
+		}
+	} else {
+		for await (const i of iterable) {
+			await q.add(iteratorFn.bind(iterable, i));
+		}
+	}
+	log(`QueueWrap: await q.onIdle iterable=${inspect(iterable)} q=${inspect(q)}`);
+	await q.onIdle();
+	log(`QueueWrap: end: q=${inspect(q)} iterable=${inspect(iterable)} q=${inspect(q)}`);
+};
+
 // Queue.prototype._debug = function _debug() {
 // 	return JSON.stringify({
 // 		'queue.length': this.queue.length,
