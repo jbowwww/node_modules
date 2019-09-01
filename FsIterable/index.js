@@ -7,8 +7,8 @@ const stream = new require('stream');
 stream.finished = obj.promisify(stream.finished);
 var pipeline = obj.promisify(stream.pipeline);
 const log = require('debug')('FsIterable');
-log.info = log.extend('info');
-log.warn = log.extend('warn');
+// log.info = log.extend('info');
+// log.warn = log.extend('warn');
 
 class FsIterable {
 	constructor(options) {
