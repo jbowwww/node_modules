@@ -55,3 +55,84 @@ module.exports = class ConcurrentIterable(iterable) {
 	}
 
 };
+
+
+// async functions, some work, some don't. e.g. buffer is good (combine into Buffer.js?), Concurrent is kinda borked
+
+
+			async function* Buffer(iterable) {
+				try {
+					let items = [];
+					let currentIndex = 0;
+					console.log(`Buffer starting buffering, items = Array[${items.length}] iterable=${inspect(iterable)}`);
+					for await (const item of iterable) {
+						items.push(item);
+					}
+					// console.log(`Buffer awaiting items (buffer to fill), items = Array[${items.length}] items[0]=${inspect(items[0])} iterable=${inspect(iterable)}`);
+					// await Promise.all(items);
+					console.log(`Buffer finished buffering, items = Array[${items.length}] items[0]=${inspect(items[0])} iterable=${inspect(iterable)}`);
+					yield* items;
+					// for (const item of items) {
+					// 	yield item;
+					// }
+					console.log(`Buffer finished streaming, items = Array[${items.length}] iterable=${inspect(iterable)}`);
+				} catch (e) {
+					console.error(`Buffer error: ${e.stack||e}`);
+				}
+
+			}
+
+			function AsyncToSyncIterator(iterable) {
+				try {
+					let iterator = iterable[Symbol.asyncIterator]();
+					let r = {
+						[Symbol.iterator]() { 
+							iterator = iterable[Symbol.asyncIterator]();
+							// console.verbose(`AsyncToSyncIterator: iterable[Symbol.asyncIterator]=${inspect(iterable[Symbol.asyncIterator])} iterator=${inspect(iterator)} this=${inspect(this)}`);
+							console.verbose(`AsyncToSyncIterator: this=${inspect(this)}`);
+							return this;
+							// return iterator;//iterable[Symbol.asyncIterator]();
+						},
+						next(...args) {
+							let item = iterator.next(...args);
+							console.verbose(`AsyncToSyncIterator.next(${inspect(args)}): item=${inspect(item)} this=${inspect(this)}`);	
+							item.then(v => console.verbose(`AsyncToSyncIterator.next.then: v=${inspect(v)}`));
+							return { value: item, done: false };
+						}
+					};
+					console.verbose(`AsyncToSyncIterator: iterable[Symbol.asyncIterator]=${inspect(iterable[Symbol.asyncIterator])}\n\titerable=${inspect(iterable)}\n\titerator=${inspect(iterator)}\n\tr=${inspect(r)}\n\tthis=${inspect(this)}`);
+					return r;
+				} catch (e) {
+					console.error(`AsyncToSyncIterator error: ${e.stack||e}`);
+				}
+			}
+			async function* ConcurrentAsync(concurrency, iterable) {
+				try {
+					// if (concurrency < 1) throw new Error(`concurrency must be >= 1, supplied argument concurrency=${concurrency}`);
+					let active = [];
+					let done = false;
+					let n = 0;
+					console.log(`Concurrent starting iteration, active=Array[${active.length}] iterable=${inspect(iterable)}`);
+					for (let item = await iterable.next(); !done; item = await iterable.next()) {	// of /*AsyncToSyncIterator*/(iterable)) {
+						console.log(`Concurrent got item #${n}=${inspect(item)}, active=Array[${active.length}] iterable=${inspect(iterable)}`);
+						// console.log(`Concurrent activating task #${n}, done=${done} active=Array[${active.length}] iterable=${inspect(iterable)}\n\tprItem=${prItem}`);
+						active.push(prItem);//.catch(e => { throw e; }));
+						prItem.then(item => {
+							active = active.splice(active.getIndexOf(prItem), 1);
+							done = item.done;
+							console.log(`Concurrent task prItem.then: item=${inspect(item)} active=${inspect(active)} done=${done}`)
+						});
+						while (active.length >= concurrency && !done) {
+							console.log(`Concurrent task #${n} waiting for active tasks, active=Array[${active.length}] iterable=${inspect(iterable)}`);
+							await pDelay(100).race(active);
+						}
+						let item = await prItem;
+						// done = item.done;
+						yield item.value;
+						n++;
+					}
+					console.log(`Concurrent finished iteration, active=Array[${active.length}] iterable=${inspect(iterable)}`);
+				} catch (e) {
+					console.error(`Concurrent error: ${e.stack||e}`);
+				}
+			}
