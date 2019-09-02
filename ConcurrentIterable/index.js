@@ -4,23 +4,23 @@ const inspect = obj.inspect;
 const log = require('debug')('Queue');
 const util = require('util');
 const { EventEmitter } = require('events');
-const Limit = require('../modules/Limit');
+const Limit = require('../Limit');
 
-module.exports = class ConcurrentIterable(iterable) {
-	const self = this;
+class ConcurrentIterable {
 	constructor(iterable, options) {
+		const self = this;
 		this.options = obj.assignDefaults(
-				typeof options === 'number' ? { concurrency: options] } :
+				typeof options === 'number' ? { concurrency: options } :
 				typeof options === 'object' ? options :
 				typeof options === 'function' ? { } : { }, { concurrency: 1 });
 		this._queue = this.options.queue || [];	// should allow for custom (de)queueing strategy, just needs to implement push() and shift()? 
 		this.errors = [];
 		this.stats = obj.inspect.withGetters({
 			active: 0, success: 0,
-			get error() => self.errors.length,
-			get pending() => self._queue.length,
-			get all() => this.queued + this.pending + this.success + this.error,
-			get allCompleted() => this.success + this.error
+			get error() { self.errors.length; },
+			get pending() { self._queue.length; },
+			get all() { this.queued + this.pending + this.success + this.error; },
+			get allCompleted() { this.success + this.error; },
 
 			// get error() { return self.errors.length; },
 			// get pending() { return self._pending.length; },
@@ -30,11 +30,11 @@ module.exports = class ConcurrentIterable(iterable) {
 		this._iterable = iterable;
 		if (this._iterable[Symbol.iterator]) {
 			for (const item of this._iterable) {
-					(async iterate() {
+				// 	(async iterate() {
 				
-				this._queue.push(item)
-				}
-			})
+				// this._queue.push(item)
+				// }
+			}
 		}
 	}
 
@@ -135,3 +135,5 @@ ConcurrentIterable.ConcurrentAsync = async function* ConcurrentAsync(concurrency
 		console.error(`Concurrent error: ${e.stack||e}`);
 	}
 };
+
+module.exports = ConcurrentIterable;
