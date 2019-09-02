@@ -11,13 +11,15 @@ util.inherits(Queue, EventEmitter);
 Queue.prototype.constructor = Queue;
 
 function Queue(options = {}) {
-	options = obj.assignDefaults(
-		typeof options === 'number' ? { concurrency: options } : options,
-		{ concurrency: 1 });
 	if (!(this instanceof Queue)) {
 		return new Queue(options);
 	}
 	EventEmitter.call(this);
+	this.options = obj.assignDefaults(
+		typeof options === 'number' ?
+			{ concurrency: options } :
+			options,
+		{ concurrency: 1 });
 	this.queue = [];
 	this.maxQueueCount = 0;
 	this.activeCount = 0;
@@ -25,41 +27,47 @@ function Queue(options = {}) {
 	this.runCount = 0;
 	this.successCount = 0;
 	this.errors = [];
-	this.concurrency = options.concurrency;
+	log(`new Queue(${inspect(options)}): this=${inspect(this)}`);
 	// return obj.inspect.withGetters(this);
 }
 
-Queue.wrap = async function QueueWrap(iterable, options, iteratorFn) {
-	options = obj.assignDefaults(
-		typeof options === 'number' ? { concurrency: options } : options,
-		{ concurrency: 1 });
-	const q = new Queue(options);
-	log(`QueueWrap: iterable=${inspect(iterable)} q=${inspect(q)}`);
+Queue.prototype.iterate = async function iterate(iterable, iteratorFn) {
+	log(`Queue.iterate(${inspect(iterable)}, ${iteratorFn}): this=${inspect(this)}`);
 	if (typeof iterable[Symbol.asyncIterator] !== 'function') {
 		for (const i of iterable) {
-			await q.add(iteratorFn.bind(iterable, i));
+			await this.add(iteratorFn.bind(iterable, i));
 		}
 	} else {
 		for await (const i of iterable) {
-			await q.add(iteratorFn.bind(iterable, i));
+			await this.add(iteratorFn.bind(iterable, i));
 		}
 	}
-	log(`QueueWrap: await q.onIdle iterable=${inspect(iterable)} q=${inspect(q)}`);
-	await q.onIdle();
-	log(`QueueWrap: end: q=${inspect(q)} iterable=${inspect(iterable)} q=${inspect(q)}`);
+	log(`QueueWrap: finished iterating iterable=${inspect(iterable)} this=${inspect(this)}`);
+	return this.onIdle().then(() => {
+		log(`QueueWrap: idle detected for iterable=${inspect(iterable)} this=${inspect(this)}`);
+	});
 };
 
-// Queue.prototype._debug = function _debug() {
-// 	return JSON.stringify({
-// 		'queue.length': this.queue.length,
-// 		maxQueueCount: this.maxQueueCount,
-// 		concurrency: this.concurrency,
-// 		activeCount: this.activeCount,
-// 		runCount: this.runCount,
-// 		successCount: this.successCount,
-// 		'errors.length': this.errors.length
-// 	});
-// };
+Queue.Iterate = async function QueueIterate(...args) { /*iterable, options, iteratorFn*/
+	log(`Queue.Iterate(${args.map(inspect).join(', ')}`);
+	let options = { concurrency: 1 }, iterable, iteratorFn;
+	for (let arg of args) {
+		if (typeof arg === 'object') {
+			if (arg[Symbol.iterator] || arg[Symbol.asyncIterator]) {
+				iterable = arg;
+			} else {
+				options = obj.assign(options, arg);
+			}
+		} else if (typeof arg === 'number') {
+			options = { concurrency: arg };
+		} else if (typeof arg === 'function') {
+			iteratorFn = arg;
+		} else {
+			throw new TypeError(`Queue.Iterate takes, in any order, args: iterable, options and iteratorFn`);
+		}
+	}
+	return new Queue(options).iterate(iterable, iteratorFn);
+};
 
 function _next() {
 	this.activeCount--;
@@ -113,7 +121,7 @@ function _run(fn, ...args)  {
 // has been reached, returns a Promise that resolves when one of the currently executing functions finishes.
 // TODO: ^ think that through, i'm not sure its quite what you want
 Queue.prototype.add = Queue.prototype.enqueue = function add(fn, ...args) {
-	if (this.activeCount < this.concurrency) { 
+	if (this.activeCount < this.options.concurrency) { 
 		_run.call(this, fn, ...args);
 		return Promise.resolve();
 	} else {
@@ -128,7 +136,7 @@ Queue.prototype.add = Queue.prototype.enqueue = function add(fn, ...args) {
 };
 
 Queue.prototype.addAndRun = Queue.prototype.enqueueAndRun = function addAndRun(fn, ...args) {
-	if (this.activeCount < this.concurrency) { 
+	if (this.activeCount < this.options.concurrency) { 
 		return _run(fn, ...args);
 	} else {
 		log(`Queueing task : ${inspect(this)}`);
