@@ -8,6 +8,7 @@ module.exports = {
 		return _.isArray(obj);
 	},
 
+	assign(...args) { return _.assign(...args); },
 	assignDefaults(target, defaults = {}) {
 		return target = _.defaults(target, defaults);
 	},
