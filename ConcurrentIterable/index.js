@@ -59,11 +59,14 @@ class ConcurrentIterable {
 
 // async functions, some work, some don't. e.g. buffer is good (combine into Buffer.js?), Concurrent is kinda borked
 
-ConcurrentIterable.Buffer = async function* Buffer(iterable) {
+// TODO: how to do progress / pass on progress from an iterable passed? (e.g. FsIterable)
+// do i need to make this a class? and implement the async iter manually...
+// defeats the syntactic sugar tho .. can i somehow wrap it in a async BufferWrap(...args) => (async function* Buffer()).call({}, ...args)
+ConcurrentIterable.Buffer = async function Buffer(iterable) {
 	try {
 		let items = [];
 		let currentIndex = 0;
-		console.log(`Buffer starting buffering, items = Array[${items.length}] iterable=${inspect(iterable)}`);
+		log(`Buffer starting buffering, items = Array[${items.length}] iterable=${inspect(iterable)} this=${inspect(this)}`);
 		for await (const item of iterable) {
 			items.push(item);
 		}

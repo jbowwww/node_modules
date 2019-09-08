@@ -4,6 +4,7 @@ const _ = require('lodash');
 
 module.exports = {
 
+	isPlain: obj => _.isPlainObject(obj),
 	isArray(obj) {
 		return _.isArray(obj);
 	},
