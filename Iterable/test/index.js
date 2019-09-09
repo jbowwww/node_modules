@@ -2,7 +2,7 @@
 "use strict";
 const { inspect } = require('../../obj');
 const assert = require('assert');
-const log = require('debug')('test/fsIterable');
+const log = require('debug')('test/Iterable');
 const Iterable = require('../index.js');
 
 describe("Async Iterable", function() {
@@ -36,11 +36,11 @@ describe("Async Iterable", function() {
 			assert.ok(item.progressPercent <= 100 || isNaN(item.progressPercent));
 			assert.ok(item.progressPercent >= 0 || isNaN(item.progressPercent));
 			assert.equal(item.progress.total, 100);
-			assert.equal(item.progress.count, count++);
+			assert.equal(item.progress.count, ++count);
 			lastProg = item.progress;
 		}
-		assert.equal(lastProg.progress, 1);
-		assert.equal(lastProg.progressPercent, 100);
+		assert.ok(lastProg.progress >= 0.99 && lastProg.progress <= 1);
+		assert.ok(lastProg.progressPercent >= 99 && lastProg.progressPercent <= 100);
 		assert.equal(lastProg.count, lastProg.total);
 		assert.equal(lastProg.count, 100);
 	});
