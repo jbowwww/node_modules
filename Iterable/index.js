@@ -10,10 +10,43 @@ const util = require('util');
 // do i need to make this a class? and implement the async iter manually...
 // defeats the syntactic sugar tho .. can i somehow wrap it in a async BufferWrap(...args) => (async function* Buffer()).call({}, ...args)
 module.exports = {
+	getIterableOptions,
 	Progress,
 	Buffer,
 	AsyncToSyncIterator
 };
+
+function getIterableOptions(args, defaultOptions = {}) {
+	let iterable, options = { };
+	for (const arg of args) {
+		if (obj.isIterable(arg)) {
+			iterable = arg;
+		} else if (obj.isPlain(arg)) {
+			if (obj.isIterable(arg.iterable) && obj.isPlain(arg.options)) {
+				options = obj.assignDefaults(arg, defaultOptions);
+			}
+		} else {
+			throw new TypeError(`Unknown argument ${inspect(arg)}`);
+		}
+	}
+	return { iterable, options };
+}
+
+async function* Parallel(/*iterable, options*/) {
+	let iterable, options = { };
+	for (const arg of arguments) {
+		if (arg[Symbol.iterator] /*|| arg[Symbol.asyncIterator]*/) {
+			iterable = arg;
+		} else if (obj.isPlain(arg)) {
+			options = obj.assign(arg, options);
+		}
+	}
+	let count = 0;
+	log(`Progress starting, iterable=${inspect(iterable)} options=${inspect(options)} this=${inspect(this)} options.getTotal(iterable)=${options.getTotal(iterable)}`);
+	for (const value of iterable) {
+
+	}
+}
 
 async function* Progress(/*iterable, options*/) {
 	let iterable, options = { getTotal: _iterable => _iterable.length };
@@ -53,6 +86,7 @@ async function Buffer(iterable) {
 		// await Promise.all(items);
 		console.log(`Buffer finished buffering, items = Array[${items.length}] items[0]=${inspect(items[0])} iterable=${inspect(iterable)}`);
 		return items;
+		// yield* items;
 		// for (const item of items) {
 		// 	yield item;
 		// }

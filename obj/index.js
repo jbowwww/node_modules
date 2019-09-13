@@ -4,11 +4,18 @@ const _ = require('lodash');
 
 module.exports = {
 
-	isPlain: obj => _.isPlainObject(obj),
-	isArray(obj) {
-		return _.isArray(obj);
-	},
+	exists: (...objs) => objs.every(obj => obj !== undefined),	//objs.forEach((obj, index, objs) => { if (obj === undefined) throw new TypeError(`object #${index} of ${objs.length} is undefined`); }),
 
+	// TODO: replace lodash with native calls or self implemented or ..? Would be nice to remove a dependency 
+	isPlain: obj => _.isPlainObject(obj),
+	isArray: obj => _.isArray(obj),
+	isFunction: obj => obj instanceof Function,//_.isFunction(obj),
+
+	isSyncIterable: obj => obj[Symbol.iterator] instanceof Function,
+	IsAsyncIterable: obj => obj[Symbol.asyncIterator] instanceof AsyncFunction,
+	isIterable: obj => this.isSyncIterable(obj) || this.isAsyncIterable(obj),
+	// TODO: Iterators (has a next() function), geberators (instanceof [Async]GeneratorFunction ??)
+		
 	assign(...args) { return _.assign(...args); },
 	assignDefaults(target, defaults = {}) {
 		return target = _.defaults(target, defaults);
