@@ -12,10 +12,13 @@ module.exports = {
 	isFunction: obj => obj instanceof Function,//_.isFunction(obj),
 
 	isSyncIterable: obj => obj[Symbol.iterator] instanceof Function,
-	IsAsyncIterable: obj => obj[Symbol.asyncIterator] instanceof AsyncFunction,
-	isIterable: obj => this.isSyncIterable(obj) || this.isAsyncIterable(obj),
+	isAsyncIterable: obj => obj[Symbol.asyncIterator] instanceof /*Async*/Function,
+	isIterable: function(obj) { return this.isSyncIterable(obj) || this.isAsyncIterable(obj); },
 	// TODO: Iterators (has a next() function), geberators (instanceof [Async]GeneratorFunction ??)
-		
+	
+	isGenerator: obj => typeof obj === 'Generator',
+	isAsyncGenerator: obj => typeof obj === 'AsyncGenerator',
+	
 	assign(...args) { return _.assign(...args); },
 	assignDefaults(target, defaults = {}) {
 		return target = _.defaults(target, defaults);

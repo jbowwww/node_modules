@@ -69,6 +69,11 @@ Queue.Iterate = async function QueueIterate(...args) { /*iterable, options, iter
 	return new Queue(options).iterate(iterable, iteratorFn);
 };
 
+Queue.Iterator = function QueueIterator(options = {}) {
+	// options = obj.assignDefaults(options, { concurrency: 1 });
+	return (iterable) => Queue.Iterate(iterable, options);
+};
+
 function _next() {
 	this.activeCount--;
 	this.emit('next');

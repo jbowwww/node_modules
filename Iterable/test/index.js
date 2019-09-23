@@ -10,13 +10,31 @@ describe("Async Iterable", function() {
 
 	this.timeout(30000);
 	
-	it('Iterable.getIterableOptions should return { iterable, options } given array with those two args in any order', function() {
+	it('Iterable.getIterableOptions should return { iterable, options } given arguments (iterable, options)', function() {
 		const iterable = new Array(0);
 		const options = { option1: 1, option2: "2" };
 		const expected = { iterable, options };
-		assert.equal(expected, Iterable.getIterableOptions(iterable, options));
-		assert.equal(expected, Iterable.getIterableOptions(options, iterable));
-		assert.equal(expected, Iterable.getIterableOptions({ iterable, options }));		 
+		const actual = Iterable.getIterableOptions(iterable, options);
+		assert.equal(expected.iterable, actual.iterable);
+		assert.equal(expected.options, actual.options);
+	});
+
+	it('Iterable.getIterableOptions should return { iterable, options } given arguments (options, iterable)', function() {
+		const iterable = new Array(0);
+		const options = { option1: 1, option2: "2" };
+		const expected = { iterable, options };
+		const actual = Iterable.getIterableOptions(iterable, options);
+		assert.equal(expected.iterable, actual.iterable);
+		assert.equal(expected.options, actual.options);
+	});
+
+	it('Iterable.getIterableOptions should return { iterable, options } given arguments ({ iterable, options })', function() {
+		const iterable = new Array(0);
+		const options = { option1: 1, option2: "2" };
+		const expected = { iterable, options };
+		const actual = Iterable.getIterableOptions(iterable, options);
+		assert.equal(expected.iterable, actual.iterable);
+		assert.equal(expected.options, actual.options);
 	});
 
 	async function* gen(count = 100) {

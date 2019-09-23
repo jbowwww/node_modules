@@ -3,7 +3,7 @@ const obj /*{ assignDefaults, inspect, promisify }*/ = require('../obj');
 const inspect = obj.inspect;
 const log = require('debug')('Iterable');
 const util = require('util');
-
+const Queue = require('@jbowwww/queue');
 // async functions, some work, some don't. e.g. buffer is good (combine into Buffer.js?), Concurrent is kinda borked
 
 // TODO: how to do progress / pass on progress from an iterable passed? (e.g. FsIterable)
@@ -13,17 +13,21 @@ module.exports = {
 	getIterableOptions,
 	Progress,
 	Buffer,
+	Queue: Queue.Iterate,
 	AsyncToSyncIterator
 };
 
-function getIterableOptions(args, defaultOptions = {}) {
+function getIterableOptions(...args/*, defaultOptions = {}*/) {
 	let iterable, options = { };
 	for (const arg of args) {
 		if (obj.isIterable(arg)) {
 			iterable = arg;
 		} else if (obj.isPlain(arg)) {
-			if (obj.isIterable(arg.iterable) && obj.isPlain(arg.options)) {
-				options = obj.assignDefaults(arg, defaultOptions);
+			if (arg.iterable && obj.isIterable(arg.iterable) && obj.isPlain(arg.options)) {
+				options = arg.options;
+				iterable = arg.iterable;
+			} else {
+				options = arg;
 			}
 		} else {
 			throw new TypeError(`Unknown argument ${inspect(arg)}`);
@@ -44,7 +48,7 @@ async function* Parallel(/*iterable, options*/) {
 	let count = 0;
 	log(`Progress starting, iterable=${inspect(iterable)} options=${inspect(options)} this=${inspect(this)} options.getTotal(iterable)=${options.getTotal(iterable)}`);
 	for (const value of iterable) {
-
+		
 	}
 }
 

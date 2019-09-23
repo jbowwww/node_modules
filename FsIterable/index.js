@@ -9,9 +9,12 @@ var pipeline = obj.promisify(stream.pipeline);
 const log = require('debug')('FsIterable');
 // log.info = log.extend('info');
 // log.warn = log.extend('warn');
+const AsyncGenerator = require('@jbowwww/async-generator');
 
-class FsIterable {
+class FsIterable extends AsyncGenerator {
 	constructor(options) {
+		super();
+		
 		this.options = obj.assignDefaults(
 			options === 'string' ? { path: options } : options, {
 				path: '.',
