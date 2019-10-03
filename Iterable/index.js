@@ -13,7 +13,7 @@ module.exports = {
 	getIterableOptions,
 	Progress,
 	Buffer,
-	Queue: Queue.Iterate,
+	async* Queue(options, iterateFn) { return yield(iterable => Queue.Iterate(options, iterable, iterateFn)); },//.Queue.Iterate,
 	AsyncToSyncIterator
 };
 
@@ -52,16 +52,19 @@ async function* Parallel(/*iterable, options*/) {
 	}
 }
 
-async function* Progress(/*iterable, options*/) {
-	let iterable, options = { getTotal: _iterable => _iterable.length };
-	for (const arg of arguments) {
-		if (arg[Symbol.iterator] /*|| arg[Symbol.asyncIterator]*/) {
-			iterable = arg;
-		} else if (obj.isPlain(arg)) {
-			options = obj.assign(arg, options);
-		}
-	}
+async function* Progress(iterable, options) {
+	// let iterable;
+	/*let*/ options = options || { getTotal: _iterable => _iterable.length };
+	// for (const arg of arguments) {
+	// 	if (arg[Symbol.iterator] || arg[Symbol.asyncIterator]) {
+	// 		iterable = arg;
+	// 	} else if (obj.isPlain(arg)) {
+	// 		options = obj.assign(arg, options);
+	// 	}
+	// }
+
 	let count = 0;
+	// iterable = iterable();
 	log(`Progress starting, iterable=${inspect(iterable)} options=${inspect(options)} this=${inspect(this)} options.getTotal(iterable)=${options.getTotal(iterable)}`);
 	for (const value of iterable) {
 		let item = {
@@ -78,7 +81,7 @@ async function* Progress(/*iterable, options*/) {
 	}
 }
 
-async function Buffer(iterable) {
+async function* Buffer(iterable) {
 	try {
 		let items = [];
 		let currentIndex = 0;
@@ -89,8 +92,8 @@ async function Buffer(iterable) {
 		// console.log(`Buffer awaiting items (buffer to fill), items = Array[${items.length}] items[0]=${inspect(items[0])} iterable=${inspect(iterable)}`);
 		// await Promise.all(items);
 		console.log(`Buffer finished buffering, items = Array[${items.length}] items[0]=${inspect(items[0])} iterable=${inspect(iterable)}`);
-		return items;
-		// yield* items;
+		// return items;
+		yield* items;
 		// for (const item of items) {
 		// 	yield item;
 		// }

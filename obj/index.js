@@ -1,6 +1,8 @@
 
 const inspect = require('util').inspect;
 const _ = require('lodash');
+// const { AsyncGeneratorFunction } = require('@jbowwww/async-generator');
+const AsyncGeneratorFunction = Object.getPrototypeOf(async function*(){}).constructor;
 
 module.exports = {
 
@@ -16,14 +18,29 @@ module.exports = {
 	isIterable: function(obj) { return this.isSyncIterable(obj) || this.isAsyncIterable(obj); },
 	// TODO: Iterators (has a next() function), geberators (instanceof [Async]GeneratorFunction ??)
 	
-	isGenerator: obj => typeof obj === 'Generator',
-	isAsyncGenerator: obj => typeof obj === 'AsyncGenerator',
+	isGenerator: obj => typeof obj === 'function',
+	isAsyncGenerator: obj => obj instanceof AsyncGeneratorFunction/*.constructor*/, //typeof obj === 'function',
 	
+	keys: obj => { let keys = []; for (const k in obj) keys.push(k); return keys; },
+
 	assign(...args) { return _.assign(...args); },
 	assignDefaults(target, defaults = {}) {
-		return target = _.defaults(target, defaults);
+		return this.assign({}, defaults, target); //target = _.defaults(target, defaults);
 	},
-	
+	with(...args) { return this.assign({}, ...args); },
+	without(base, ...without) { 
+		let r = this.assign({}, base);
+		if (without && this.isArray(without[0])) {
+			without = without[0];
+		}
+		for (const withoutPropName of this.isArray(without) ? without : this.keys(without)) {
+			delete base[withoutPropName];
+		}
+		return r;
+	},
+
+	clone(obj) { return this.assign({}, obj); },
+
 	inspect: Object.assign(require('util').inspect, {
 		withGetters(obj, ...objectMaps) {
 			// const wrapped = _.assign({}, obj);
