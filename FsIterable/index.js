@@ -14,20 +14,16 @@ const { AsyncGenerator } = require('@jbowwww/async-generator');
 class FsIterable extends AsyncGenerator {
 	constructor(options) {
 		super();
-		
+		const _this = this;
 		this.options = obj.assignDefaults(
 			options === 'string' ? { path: options } : options, {
 				path: '.',
 				progress: false,
-				errorBehaviour: 'yield',		// yields a FsIterateError instance. 'throw' will rethrows, stopping the generator
-				errors: []						// array of errors when errorBehaviour is 'yield'. If the caller wants to collect these, they can supply an error array of their own. If you don't want errors to be collected (e.g. to conserve memory), supply null or undefined
+				errors: []
 			});
-		this.paths = [ this.options.path ];
 		this._fsIterateInnerCalls = 0;
 		this._rootPathDepth = this.options.path.split(nodePath.sep).length;
-		this.errors = this.options.errors;
-
-		const _this = this;
+		this.errors = this.options.errors || { push() {} };	// by defaults errors collect in an array. If options.errors is falsey, errors get push()'d to nowhere
 		this.count = obj.inspect.withGetters({
 			file: 0,
 			dir: 0,
@@ -35,22 +31,20 @@ class FsIterable extends AsyncGenerator {
 			get all() { return this.file + this.dir + this.unknown; },
 			doneCounting: false
 	 	});
-
 		if (this.options.progress) {
-			let innerFs = new FsIterable({ path: this.options.path, progress: false });/*obj.without(this.options, 'progress')*/
-			(async function innerFsProgress() {
+			const innerFs = new FsIterable({ path: this.options.path, progress: false });
+			(async /*function *//*innerFsProgress*/() => {
 				for await (const f of innerFs) {}
-				this.totalCount = innerFs.count;
-				this.progress = obj.inspect.withGetters({
-					get total() { return this.totalCount.all; },
-					current: 0,//() { return _this._fsIterateInnerCalls;/*itemIndex;*/ },
-					get progress() { return this.total === 0 ? 0 : 100 * this.current/*_this.itemIndex*/ / this.total; },
-					get done() { return this.doneCounting && this.current === this.total; },
-					get doneCounting() { return _this.count.doneCounting; }
-				}, { progress: v => '' + v + '%' });
-			}).call(this);
+				// this.totalCount = innerFs.count;
+			})/*.call*/(/*this*/);
+			this.progress = obj.inspect.withGetters({
+				get total() { return/* this.totalCount*/innerFs.count.all; },
+				current: 0,//() { return _this._fsIterateInnerCalls;/*itemIndex;*/ },
+				get progress() { return this.total === 0 ? 0 : 100 * this.current/*_this.itemIndex*/ / this.total; },
+				get done() { return this.doneCounting && this.current === this.total; },
+				get doneCounting() { return _this.count.doneCounting; }
+			}, { progress: v => '' + v + '%' });
 		}
-
 		log(`FsIter(${obj.inspect(this.options, { compact: false })}): this=${obj.inspect(this)}`);
 	}
 
