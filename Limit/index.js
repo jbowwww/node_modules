@@ -6,9 +6,6 @@ const inspect = obj.inspect;
 function Limit(fn, options = { }) {
 	if (typeof fn !== 'function' && typeof options === 'function') {
 		[ fn, options ] = [ options, fn ];
-		// let tmp = fn;
-		// fn = options;
-		// options = fn;
 	}
 	options = obj.assignDefaults(options, { concurrency: 1 });
 	const limitedFunction = async function limFn(...args) {
