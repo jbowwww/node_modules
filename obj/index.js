@@ -25,7 +25,7 @@ module.exports = {
 
 	assign(...args) { return _.assign(...args); },
 	assignDefaults(target, defaults = {}) {
-		return this.assign({}, defaults, target); //target = _.defaults(target, defaults);
+		return target = _.defaults(target, defaults); //this.assign({}, defaults, target);
 	},
 	with(...args) { return this.assign({}, ...args); },
 	without(base, ...without) { 
