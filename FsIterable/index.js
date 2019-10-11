@@ -16,7 +16,7 @@ class FsIterable extends AsyncGenerator {
 		super();
 		const _this = this;
 		this.options = obj.assignDefaults(
-			options === 'string' ? { path: options } : options, {
+			typeof options === 'string' ? { path: options } : options, {
 				path: '.',
 				progress: false,
 				errors: []
@@ -65,7 +65,7 @@ class FsIterable extends AsyncGenerator {
 				}
 				yield item;
 				const currentDepth = item.pathDepth - _this._rootPathDepth;
-				log(`limitFsIter newItem: ${item.fileType}: currentDepth=${currentDepth} '${item.path}'`);
+				log(`fsIterateInner newItem: ${item.fileType}: currentDepth=${currentDepth} '${item.path}'`);
 				if (item.fileType === 'dir' && (_this.options.maxDepth === 0 || currentDepth < _this.options.maxDepth)) {
 					const names = await nodeFs.readdir(item.path);
 					const paths = names
