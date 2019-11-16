@@ -1,0 +1,11 @@
+{
+  "name": "@jbowwww/source",
+  "version": "1.0.0",
+  "description": "Normalize sources into a hybrid iterator with async and sync streaming",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

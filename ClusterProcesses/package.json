@@ -1,0 +1,11 @@
+{
+  "name": "@jbowwww/cluster-processes",
+  "version": "1.0.0",
+  "description": "Convenience function to fork number of processes and execute a function from an array in each\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

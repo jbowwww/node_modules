@@ -1,0 +1,11 @@
+{
+  "name": "@jbowwww/stream-async",
+  "version": "1.0.0",
+  "description": "A (I have just realised very possibly pointless) function to stream async iterators through a function and catch and optionally throw errors",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
