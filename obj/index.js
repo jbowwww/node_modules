@@ -7,6 +7,7 @@ const AsyncGeneratorFunction = Object.getPrototypeOf(async function*(){}).constr
 module.exports = {
 
 	exists: (...objs) => objs.every(obj => obj !== undefined),	//objs.forEach((obj, index, objs) => { if (obj === undefined) throw new TypeError(`object #${index} of ${objs.length} is undefined`); }),
+	namesExist: (obj, ...names) => names.every(name => obj[name] !== undefined),
 
 	// TODO: replace lodash with native calls or self implemented or ..? Would be nice to remove a dependency 
 	isPlain: obj => _.isPlainObject(obj),
@@ -21,8 +22,10 @@ module.exports = {
 	isGenerator: obj => typeof obj === 'function',
 	isAsyncGenerator: obj => obj instanceof AsyncGeneratorFunction/*.constructor*/, //typeof obj === 'function',
 	
+	generator: fn => (...args) => fn.apply({}, args),
 	keys: obj => { let keys = []; for (const k in obj) keys.push(k); return keys; },
-
+	map: (obj, fn) => Object.fromEntries(Object.entries(obj).map(fn)),
+	fromEntries: Object.fromEntries,
 	assign(...args) { return _.assign(...args); },
 	assignDefaults(target, defaults = {}) {
 		return target = _.defaults(target, defaults); //this.assign({}, defaults, target);
@@ -63,11 +66,19 @@ module.exports = {
 		}
 	}),
 	
-	promisify: require('util').promisify,
-	promisifyObject(o) { 
-		return Object.keys(o).reduce((a, k) => Object.defineProperty(a, k, { writeable: true,
-			enumerable: true,
-			value: o[k] instanceof Function ? this.promisify(o[k]) : o[k]
-		}), {});
-	}
+	promisify(...args) {
+		if (args.length >= 1) {
+			switch (typeof args[0]) {
+				case 'function': return (require('util').promisify)(...args);
+				case 'object' : return Object.keys(args[0]).reduce((a, k) => Object.defineProperty(a, k, { writeable: true,
+					enumerable: true,
+					value: args[0][k] instanceof Function ? this.promisify(args[0][k]) : args[0][k]
+				}), {});
+			}
+		}
+		throw new TypeError(`args = ${inspect(args)}`);
+	},
+	promisifyObject(...args) { return this.promisify(...args); }
 };
+
+
