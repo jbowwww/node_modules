@@ -11,7 +11,6 @@ module.exports = async (source, options, fn) => {
 	if (typeof fn !== 'function') {
 		throw new TypeError(`fn should be a function`);
 	}
-	let processFn = Limit({ concurrency: 4 }, fn);
 	for await (const data of source) {
 		try {
 			const processedData = await fn.call(source, data);
