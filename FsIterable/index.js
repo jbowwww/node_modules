@@ -1,6 +1,6 @@
 "use strict";
 const obj = require('../obj');
-const nodeFs = obj.promisifyObject(require('fs'));
+const nodeFs = require('fs').promises;// obj.promisifyObject(require('fs'));
 const nodePath = require('path');
 const AsyncQueue = require('../AsyncQueue');
 const stream = new require('stream');
@@ -18,6 +18,7 @@ class FsIterable extends AsyncGenerator {
 		this.options = obj.assignDefaults(
 			typeof options === 'string' ? { path: options } : options, {
 				path: '.',
+				maxDepth: 0,
 				progress: false,
 				errors: []
 			});
@@ -32,17 +33,24 @@ class FsIterable extends AsyncGenerator {
 			doneCounting: false
 	 	});
 		if (this.options.progress) {
-			const innerFs = new FsIterable({ path: this.options.path, progress: false });
-			(async /*function *//*innerFsProgress*/() => {
-				for await (const f of innerFs) {}
-				// this.totalCount = innerFs.count;
-			})/*.call*/(/*this*/);
+			this._innerFs = new FsIterable({ path: this.options.path, maxDepth: this.options.maxDepth, filter: this.options.filter, progress: false });
+			this._prInnerFs = (//new Promise((resolve, reject) => {
+				(async /*function *//*innerFsProgress*/() => {
+					// try {
+						for await (const f of this._innerFs) {}
+						// resolve();
+						// this.totalCount = innerFs.count;
+					// } catch(e) {
+					// 	reject(e);
+					// }
+				})/*.call*/(/*this*/)
+			);//});
 			this.progress = obj.inspect.withGetters({
-				get total() { return/* this.totalCount*/innerFs.count.all; },
+				get total() { return/* this.totalCount*/_this._innerFs.count.all; },
 				current: 0,//() { return _this._fsIterateInnerCalls;/*itemIndex;*/ },
 				get progress() { return this.total === 0 ? 0 : 100 * this.current/*_this.itemIndex*/ / this.total; },
 				get done() { return this.doneCounting && this.current === this.total; },
-				get doneCounting() { return _this.count.doneCounting; }
+				get doneCounting() { return _this._innerFs.count.doneCounting; }
 			}, { progress: v => '' + v + '%' });
 		}
 		log(`FsIter(${obj.inspect(this.options, { compact: false })}): this=${obj.inspect(this)}`);
@@ -56,6 +64,10 @@ class FsIterable extends AsyncGenerator {
 		// 	return { done: true };
 		// } else {
 			// const path = _this.paths.shift();
+			// if (!!_this._prInnerFs) {
+			// 	await _this._prInnerFs;
+			// 	log(`_this._innerFs: ${obj.inspect(_this._innerFs)} prInnerFs: ${obj.inspect(_this._prInnerFs)}`);
+			// }
 			try {
 				_this._fsIterateInnerCalls++;
 				const prItem = createItem.call(_this, path);
@@ -75,7 +87,7 @@ class FsIterable extends AsyncGenerator {
 					for (const innerPath of paths) {
 						// paths.push(innerPath);
 
-						yield* fsIterateInner.call(_this,innerPath);
+						yield* fsIterateInner.call(this,innerPath);
 					}
 				}
 				// return { value: item, done: false };
@@ -95,7 +107,7 @@ class FsIterable extends AsyncGenerator {
 		})(this.options.path);
 
 		async function createItem(path) {
-			const _this = this;
+			// const _this = this;
 			const item = obj.inspect.withGetters({
 				path: /*nodePath.resolve*/(path),
 				stats: await nodeFs.lstat(path),
