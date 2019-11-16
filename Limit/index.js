@@ -3,11 +3,15 @@
 const obj /*{ assignDefaults, inspect, promisify }*/ = require('../obj');
 const inspect = obj.inspect;
 
-function Limit(fn, options = { }) {
-	if (typeof fn !== 'function' && typeof options === 'function') {
-		[ fn, options ] = [ options, fn ];
+function Limit(...args/*fn, options = {}*/) {
+	let options = { concurrency: 1 }, fn;
+	for (let arg of args) {
+		if (typeof arg === 'function' || typeof arg === 'AsyncFunction') {
+			fn = arg;
+		} else if (typeof arg === 'object') {
+			options = obj.assign(options, arg);
+		}
 	}
-	options = obj.assignDefaults(options, { concurrency: 1 });
 	const limitedFunction = async function limFn(...args) {
 		while (/*limitedFunction*/limFn.pending.length >= options.concurrency) {
 		    await Promise.race(/*limitedFunction*/limFn.pending).catch(() => {});
