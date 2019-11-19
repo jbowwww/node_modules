@@ -1,6 +1,8 @@
 
 const cluster = require('cluster');
 const debug = require('debug')('cluster-processes');
+const { inspect } = require('util');
+const pEvent = require('p-event');
 
 module.exports = async (...processes) => {
 	const workerPromises = [];
@@ -20,7 +22,12 @@ module.exports = async (...processes) => {
 			throw new Error(`Worker didn't get valid ID`);
 		}
 		debug(`worker process #${id} has processes: ${inspect(processes)}`);
-		const ret = await (processes[id])();
+		let ret;
+		try {
+			ret = await (processes[id])();
+		} catch(e) {
+			debug(`worker process #${id} exception: ${e.stack||e}`);			
+		}
 		debug(`worker process #${id} returned: ${inspect(ret)}`);
 	}
 };
