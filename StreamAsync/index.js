@@ -1,3 +1,6 @@
+const log = require('debug')('stream-async');
+const { inspect } = require('util');
+
 module.exports = async (source, options, fn) => {
 	const defaultOptions = { concurrency: 1, throwErrors: true, errors: [] };
 	if (typeof options === 'function' && fn === undefined) {
@@ -11,15 +14,22 @@ module.exports = async (source, options, fn) => {
 	if (typeof fn !== 'function') {
 		throw new TypeError(`fn should be a function`);
 	}
-	for await (const data of source) {
-		try {
-			const processedData = await fn.call(source, data);
-		} catch (e) {
-			options.errors.push(e);
-			if (options.throwErrors) {
-				throw e;
+	const p = [];
+	for (const s of source.length ? source : [ source ]) {
+		p.push((async function innerSource() {
+			for await (const data of s) {
+				try {
+					const processedData = await fn.call(source, data);
+				} catch (e) {
+					options.errors.push(e);
+					log('streamAsync: Exception caught processing data=${inspect(data)}: ${e.stack||e}');
+					if (options.throwErrors) {
+						throw e;
+					}
+				}
 			}
-		}
+		})());
 	}
+	await Promise.all(p);
 	console.log(`errors[${errors.length}] = ${inspect(errors)}`);
 };
