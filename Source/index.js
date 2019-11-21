@@ -20,7 +20,7 @@ module.exports = (inputs, options = {}, fn) => {
 			fn = Limit(fn);
 		}
 	}
-	const p = [];
+	let p = new Set();
 	for (let input of (!inputs.length ? [ inputs ] : inputs)) {
 		let next = null;
 		if (input[Symbol.asyncIterator]) {
@@ -37,10 +37,11 @@ module.exports = (inputs, options = {}, fn) => {
 		}
 		// Object.defineProperty(input, '_next', { enumerable: false, writeable: false, configurable: false, value: next });
 		(function pushPr(next) {
+			// wrapping in promise should allow this to handle async and non-async generators?
 			let pr = Promise.resolve(typeof fn === 'function' ? fn.call(input, next()) : next());
-			p.push(pr);
+			p.add(pr);
 			pr.then(({ done, val }) => {
-				p.splice(p.indexOf(pr));
+				p.delete(pr);
 				if (!done) {
 					pushPr();
 				}
@@ -49,7 +50,7 @@ module.exports = (inputs, options = {}, fn) => {
 	}
 	const r = {
 		next: async () => {
-			return p.length > 0 ? Promise.race(p) : Promise.resolve({ done: true });
+			return p.size > 0 ? Promise.race(p) : Promise.resolve({ done: true });
 		},
 		[Symbol.iterator]() { return this; },
 		[Symbol.asyncIterator]() { return this; } 
