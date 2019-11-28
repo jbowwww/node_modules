@@ -22,7 +22,7 @@ module.exports = async (source, options, fn) => {
 					const processedData = await fn.call(source, data);
 				} catch (e) {
 					options.errors.push(e);
-					log('streamAsync: Exception caught processing data=${inspect(data)}: ${e.stack||e}');
+					log(`streamAsync: Exception caught processing data=${inspect(data)}: ${e.stack||e}`);
 					if (options.throwErrors) {
 						throw e;
 					}
@@ -31,5 +31,5 @@ module.exports = async (source, options, fn) => {
 		})());
 	}
 	await Promise.all(p);
-	console.log(`errors[${errors.length}] = ${inspect(errors)}`);
+	debug(`errors[${options.errors.length}] = ${inspect(options.errors)}`);
 };
