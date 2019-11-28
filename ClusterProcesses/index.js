@@ -1,6 +1,6 @@
 
 const cluster = require('cluster');
-const debug = require('debug')('cluster-processes');
+const debug = require('@jbowwww/debug')('cluster-processes');
 const { inspect } = require('util');
 const pEvent = require('p-event');
 
@@ -21,19 +21,24 @@ async function clusterProcesses(...processes) {
 	}
 	else if (cluster.isWorker) {
 		const id = cluster.worker.id;
-		debug(`Worker #${id} has processes=${inspect(processes)}`);
 		const processIndex = process.env.processIndex;
-		debug(`Worker #${id} has processIndex=${processIndex}`);
 		const processFn = processes[processIndex] || processes[id];
-		debug(`Worker #${id} has processFn: ${inspect(processFn)}`);
 		const name = isNumber(processIndex) ? (processFn.name || `Worker #${processIndex}`) : processIndex;
+		Object.defineProperty(cluster.worker, 'name', { value: name });
+		debug(`Worker #${id} has processes=${inspect(processes)}`);
+		debug(`Worker #${id} has processIndex=${processIndex}`);
+		debug(`Worker #${id} has processFn: ${inspect(processFn)}`);
 		debug(`Worker #${id} has name='${name}'`);
-		let ret;
+		let ret, exitCode = 1;
 		try {
 			ret = await processFn();
 			debug(`worker process #${id} '${name}' returned: ${inspect(ret)}`);
+			exitCode = 0;
 		} catch(e) {
-			debug(`worker #${id} '${name}' exception: ${e.stack||e}`);			
+			debug(`worker #${id} '${name}' exception: ${e.stack||e}`);
+			exitCode = 1;			
 		}
+		debug(`worker #${id} '${name}' exiting with exitCode=${exitCode}`);
+		process.exit(exitCode);
 	}
 }
