@@ -1,4 +1,6 @@
 const Limit = require('@jbowwww/limit');
+const debug = require('@jbowwww/debug')('source');
+const { inspect } = require('util');
 
 // TODO: Finish combining 'source' mopdule into this one by allowing 'input' param to be an array of sources instead of just a source
 // definitely needs unit tests
@@ -29,35 +31,50 @@ function source(...inputs) {
 		} else if (input.addEventListener || input.on || input.once) {
 			next = () => new Promise((resolve, reject) => {
 				input
-				.once(options.event||'data', (data) => resolve({ value: data, done: false}))
+				.once(options.event||'data', (data) => resolve({ value: data, done: false }))
 				.once(options.endEvent||'end', () => resolve({ done: true })).once('error', reject);
 			});
 		} else {
-			console.log(`Could not get source iteration technique!`);
+			debug(`Could not get source iteration technique!`);
 		}
 		// Object.defineProperty(input, '_next', { enumerable: false, writeable: false, configurable: false, value: next });
 		(function pushPr(next) {
 			// wrapping in promise should allow this to handle async and non-async generators?
-			let pr = Promise.resolve(next());
-			p.add(pr);
-			pr.then(({ done, val }) => {
-				p.delete(pr);
-				if (!done) {
+			let pr = Promise.resolve(next())
+			.then(r => {
+				if (r && !r.done) {
 					pushPr(next);
 				}
-			});
+				return r;
+			})
+		.catch(e => {
+				debug(`warn: Source e=${inspect(e.stack||e)}`);
+				pushPr(next);
+			}).finally(r => { p.delete(pr); return r; });
+			p.add(pr);
 		})(next);
 	}
 	const r = {
-		next: async () => {
-			return p.size > 0 ? Promise.race(p)/*.then(value => ({ value }))*/ : Promise.resolve({ done: true });
+		next() {
+			return p.size > 0 ? 
+				Promise.race(p)
+				// .then((value) => ({ value, done: false }))
+				.catch(e => {
+					debug(`warn: Source e=${inspect(e.stack||e)}`);
+					return ({ done: false })
+			 	})
+			 : 	Promise.resolve({ done: true });
 		},
 		// [Symbol.iterator]() { return this; },
 		[Symbol.asyncIterator]() { return this; },
 		async pipe(...fns) {
 			for await (let data of this) {
-				for (const fn of fns) {
-					data = await fn(data);
+				try {
+					for (const fn of fns) {
+						data = await fn(data);
+					}
+				} catch (e) {
+					debug(`warn: data=${inspect(data)} e=${e.stack||e}`);
 				}
 				// yield data;
 			}
