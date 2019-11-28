@@ -6,7 +6,7 @@ const AsyncQueue = require('../AsyncQueue');
 const stream = new require('stream');
 stream.finished = obj.promisify(stream.finished);
 var pipeline = obj.promisify(stream.pipeline);
-const log = require('debug')('FsIterable');
+const log = require('@jbowwww/debug')('FsIterable');
 // log.info = log.extend('info');
 // log.warn = log.extend('warn');
 const { AsyncGenerator } = require('@jbowwww/async-generator');
@@ -57,17 +57,12 @@ class FsIterable extends AsyncGenerator {
 	}
 
 	[Symbol.asyncIterator]() {
-	// async next() {
 		const _this = this;
-	return (async function* fsIterateInner(path) {
-		// if (this.paths.length === 0) {
-		// 	return { done: true };
-		// } else {
-			// const path = _this.paths.shift();
-			// if (!!_this._prInnerFs) {
-			// 	await _this._prInnerFs;
-			// 	log(`_this._innerFs: ${obj.inspect(_this._innerFs)} prInnerFs: ${obj.inspect(_this._prInnerFs)}`);
-			// }
+		return (async function* fsIterateInner(path) {
+			if (!!_this._prInnerFs) {
+				await _this._prInnerFs;
+				log(`_this._innerFs: ${obj.inspect(_this._innerFs)} prInnerFs: ${obj.inspect(_this._prInnerFs)}`);
+			}
 			try {
 				_this._fsIterateInnerCalls++;
 				const prItem = createItem.call(_this, path);
@@ -85,31 +80,21 @@ class FsIterable extends AsyncGenerator {
 						.map(name => nodePath.join(item.path, name));
 					log('%d entries, %d matching filter at depth=%d in dir:%s', names.length, paths.length, currentDepth, item.path);
 					for (const innerPath of paths) {
-						// paths.push(innerPath);
-
 						yield* fsIterateInner.call(this,innerPath);
 					}
 				}
-				// return { value: item, done: false };
 			} catch (e) {
-				// e = new FsIterable.Error(e, path);
-				// if (obj.isArray(_this.errors))
-					_this.errors.push(e);
-				// if (_this.options.errorBehaviour === 'yield')
-				// 	yield e;
-				// else if (_this.options.errorBehaviour === 'throw')
-					throw e;
-			} finally {
+				_this.errors.push(e);
+				} finally {
+				log(`fsIterateInner done`)
 				if (--_this._fsIterateInnerCalls === 0)
 				_this.count.doneCounting = true;
 			}
-		// }
 		})(this.options.path);
 
 		async function createItem(path) {
-			// const _this = this;
 			const item = obj.inspect.withGetters({
-				path: /*nodePath.resolve*/(path),
+				path: (path),
 				stats: await nodeFs.lstat(path),
 				get fileType() { return this.stats.isDirectory() ? 'dir' : this.stats.isFile() ? 'file' : 'unknown'; },
 				get pathDepth() { return this.path.split(nodePath.sep).length; },
