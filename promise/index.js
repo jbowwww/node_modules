@@ -23,7 +23,7 @@ const event = (emitter, options = {}) => {
 
 const map = (array, asyncMapFn) => Promise.all(array.map(asyncMapFn));
 
-const module.exports = {
+module.exports = {
 	delay,
 	event,
 	map

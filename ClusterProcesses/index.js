@@ -2,7 +2,7 @@
 const cluster = require('cluster');
 const debug = require('@jbowwww/debug')('cluster-processes');
 const { inspect } = require('util');
-const pEvent = require('p-event');
+const { event } = require('@jbowwww/promise');
 
 module.exports = clusterProcesses;
 
@@ -13,11 +13,12 @@ async function clusterProcesses(...processes) {
 			// debug(`Master forking worker for processIndex='${processIndex}'`);
 			const worker = cluster.fork({ processIndex });
 			debug(`Master forked worker #${worker.id} for processIndex=${processIndex}`);
-			workerPromises.push(pEvent(worker, 'exit'));
+			workerPromises.push(event(worker, 'exit'));
 		}
 		debug(`Master awaiting ${workerPromises.length} promises: ${inspect(workerPromises)}`);
 		const ret = await Promise.all(workerPromises);
 		debug(`Master received fulfilment array of: ${inspect(ret)}`);
+		cluster.disconnect();
 	}
 	else if (cluster.isWorker) {
 		const id = cluster.worker.id;

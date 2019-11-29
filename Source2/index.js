@@ -1,8 +1,14 @@
 const { event } = require('@jbowwww/promise');
 const Limit = require('@jbowwww/limit');
-const debug = require('debug')('@jbowwww/Source2');
+const debug = require('@jbowwww/debug')('@jbowwww/Source2');
+const { inspect } = require('util');
 
-async function* emitter(emitter, options, mapFn) {
+module.exports = {
+	emitter,
+	combine
+};
+
+function emitter(emitter, options, mapFn) {
 	if (!emitter.once) {	// let options optionally go first
 		if (typeof options.once === 'function') {
 			const swap = emitter;
@@ -18,46 +24,60 @@ async function* emitter(emitter, options, mapFn) {
 	}
 	options = { event: 'data', error: 'error', end: 'end', ...(options || {}) };
 	if (!mapFn) {
-		mapFn = data => data;
+		mapFn = data => ({ value: data, done: false });
 	}
 	if (typeof mapFn !== 'function') {
 		throw new TypeError(`Unknown argument(s)`);
 	}
 	debug(`emitter: emitter=${inspect(emitter)} options=${inspect(options)} mapFn=${inspect(mapFn)}`);
+	const emitEndPr = new Promise((resolve, reject) => {
+		emitter.once(options.end, resolve);
+		emitter.once(options.error, reject);
+	});
 	return {
-		next() {
-			return Promise.race(
-				event(emitter, options).then(mapFn);
-		},
-		[Symbol.asyncIterator]() {
-			return this;
-		}
+		next: () => Promise.race([
+			emitEndPr.then(() => ({ done: true })),
+			new Promise((resolve, reject) => {
+				emitter.once(options.event, resolve);
+				emitter.once(options.error, reject);
+			})
+			.then(mapFn)
+			.then(data =>
+				 typeof data !== 'object'
+			 ||  typeof data.value === null
+			 ||  typeof data.done !== 'boolean'
+			 ?	 ({ value: data, done: false })
+			 : 	 data)
+		]),
+		[Symbol.asyncIterator]() { return this; }
 	};
 }
 
 function combine(...inputs) {
 	const p = new Set();
-	for (const input in inputs) {
+	for (const input of inputs) {
 		debug(`combine: input=${inspect(input)}`);
 		const it = typeof input[Symbol.asyncIterator] === 'function'
 			? input[Symbol.asyncIterator]() : input[Symbol.iterator]();
-		(async pushNext(next) => {
-			const pr = Promise.resolve(next());
-			p.add(pr);
-			pr.then(({ value, done }) => {
-				p.delete(pr);
-				if (!done) {
+		(async function pushNext(next) {
+			const pr =
+				Promise.resolve(next())
+				.then(({ value, done }) => {
+					p.delete(pr);
+					if (!done) {
+						pushNext(next);
+					}
+					return ({ value, done });
+				}).catch(e => {
+					p.delete(pr);
+					debug(`warn: combine input=${inspect(input)} caught exception: ${e.stack||e}`);
 					pushNext(next);
-				}
-			}.catch(e => {
-				p.delete(pr);
-				debug(`warn: combine input=${inspect(input)} caught exception: ${e.stack||e}`);
-				pushNext(next);
-			});
-		})(it.next);
-		return {
-			[Symbol.asyncIterator]() { return this; },
-			next: () => p.size > 0 ? Promise.race(p.toArray()) : Promise.resolve({ done: true });
-		};
+				});
+			p.add(pr);
+		})(it.next.bind(it));
 	}
+	return {
+		[Symbol.asyncIterator]() { return this; },
+		next: () => p.size > 0 ? Promise.race(Array.from(p)) : Promise.resolve({ done: true })
+	};
 }

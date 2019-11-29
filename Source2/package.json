@@ -1,5 +1,5 @@
 {
-  "name": "@jbowwww/source2",
+  "name": "@jbowwww/Source2",
   "version": "1.0.0",
   "description": "Functions for creating and manipulating iterators, asyncIterators, generators, readables as homogeneous sources",
   "main": "index.js",
