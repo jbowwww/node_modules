@@ -104,7 +104,7 @@ class AsyncGenerator extends AsyncGeneratorPrototype.constructor {
 	constructor() {
 		super();
 		// this.pipe = AsyncGeneratorPipe;
-		log(`new AsyncGenerator[${this.prototype.constructor}]: this=${inspect(this)}`);
+		log(`new AsyncGenerator[${AsyncGenerator.prototype.constructor}]`);//: this=${inspect(this)}`);
 	}
 
 	[Symbol.asyncIterator]() {

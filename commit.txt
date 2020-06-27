@@ -1,0 +1,1 @@
+git add AsyncGenerator/ ; git commit -m "Implemented map, tap, filter, pipe, pipeline, others, directly on (async function*() {}).prototype, not sure whether will work or not"

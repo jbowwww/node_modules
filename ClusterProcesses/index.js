@@ -19,6 +19,7 @@ async function clusterProcesses(...processes) {
 		const ret = await Promise.all(workerPromises);
 		debug(`Master received fulfilment array of: ${inspect(ret)}`);
 		cluster.disconnect();
+		
 	}
 	else if (cluster.isWorker) {
 		const id = cluster.worker.id;
