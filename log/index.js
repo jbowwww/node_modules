@@ -6,7 +6,7 @@ function _log(...args) {
 	return log.info(...args)
 };
 
-const fileName = module.parent.filename.replace(new RegExp('^' + path.dirname(require.main.filename)), '');
+const fileName = module.parent.filename.replace(new RegExp('^' + path.dirname(require.main.filename)+'/'), '');
 const moduleName = fileName.replace(/\.js$/i, '');
 console.log({ __filename, __dirname, requireMainFilename: require.main.filename, fileName, moduleName });
 delete require.cache[__filename];	// delete so module.parent repopulated at next require()
