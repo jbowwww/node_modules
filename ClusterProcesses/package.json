@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@jbowwww/log": "file:../log",
+    "@jbowwww/promise": "file:../promise",
     "debug": "^4.1.1",
     "p-event": "^4.1.0"
   }

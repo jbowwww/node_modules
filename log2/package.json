@@ -1,0 +1,22 @@
+{
+  "name": "@jbowwww/log2",
+  "version": "1.0.0",
+  "description": "Custom wrapper around debug npm module",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbowwww/node_modules.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jbowwww/node_modules/issues"
+  },
+  "homepage": "https://github.com/jbowwww/node_modules#readme",
+  "dependencies": {
+    "debug": "^4.1.1"
+  }
+}

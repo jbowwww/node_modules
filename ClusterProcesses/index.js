@@ -1,6 +1,6 @@
 
 const cluster = require('cluster');
-const debug = require('@jbowwww/debug')('cluster-processes');
+const log = require('@jbowwww/log');
 const { inspect } = require('util');
 const { event } = require('@jbowwww/promise');
 
@@ -10,14 +10,14 @@ async function clusterProcesses(...processes) {
 	const isNumber = value => typeof value === 'number' || /^[-+]?(\d+|Infinity)(\.\d*)?$/.test(value);const workerPromises = [];
 	if (cluster.isMaster) {
 		for (let processIndex in processes) {
-			// debug(`Master forking worker for processIndex='${processIndex}'`);
+			// log.verbose(`Master forking worker for processIndex='${processIndex}'`);
 			const worker = cluster.fork({ processIndex });
-			debug(`Master forked worker #${worker.id} for processIndex=${processIndex}`);
+			log.verbose(`Master forked worker #${worker.id} for processIndex=${processIndex}`);
 			workerPromises.push(event(worker, 'exit'));
 		}
-		debug(`Master awaiting ${workerPromises.length} promises: ${inspect(workerPromises)}`);
+		log.verbose(`Master awaiting ${workerPromises.length} promises: ${inspect(workerPromises)}`);
 		const ret = await Promise.all(workerPromises);
-		debug(`Master received fulfilment array of: ${inspect(ret)}`);
+		log.verbose(`Master received fulfilment array of: ${inspect(ret)}`);
 		cluster.disconnect();
 		
 	}
@@ -27,20 +27,20 @@ async function clusterProcesses(...processes) {
 		const processFn = processes[processIndex] || processes[id];
 		const name = isNumber(processIndex) ? (processFn.name || `Worker #${processIndex}`) : processIndex;
 		Object.defineProperty(cluster.worker, 'name', { value: name });
-		debug(`Worker #${id} has processes=${inspect(processes)}`);
-		debug(`Worker #${id} has processIndex=${processIndex}`);
-		debug(`Worker #${id} has processFn: ${inspect(processFn)}`);
-		debug(`Worker #${id} has name='${name}'`);
+		log.verbose(`Worker #${id} has processes=${inspect(processes)}`);
+		log.verbose(`Worker #${id} has processIndex=${processIndex}`);
+		log.verbose(`Worker #${id} has processFn: ${inspect(processFn)}`);
+		log.verbose(`Worker #${id} has name='${name}'`);
 		let ret, exitCode = 1;
 		try {
 			ret = await processFn();
-			debug(`worker process #${id} '${name}' returned: ${inspect(ret)}`);
+			log.verbose(`worker process #${id} '${name}' returned: ${inspect(ret)}`);
 			exitCode = 0;
 		} catch(e) {
-			debug(`worker #${id} '${name}' exception: ${e.stack||e}`);
+			log.verbose(`worker #${id} '${name}' exception: ${e.stack||e}`);
 			exitCode = 1;			
 		}
-		debug(`worker #${id} '${name}' exiting with exitCode=${exitCode}`);
+		log.verbose(`worker #${id} '${name}' exiting with exitCode=${exitCode}`);
 		process.exit(exitCode);
 	}
 }

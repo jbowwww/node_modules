@@ -2,14 +2,16 @@
 
 const console = require('@jbowwww/log');
 const util = require('util');
-const exec = util.promisify(require('child_process').exec)
+const child_process = require('child_process');
+const nodeExec = util.promisify(child_process.exec);
+const nodeSpawn = util.promisify(child_process.spawn);
 
 module.exports = {
 	/* Exec a shell command(Joel's way) throwing if ANY output on stderr
 	 */
-	async execCommand(command) {
+	async exec(command) {
 		try {
-			const { stdout, stderr } = await exec(command);
+			const { stdout, stderr } = await nodeExec(command);
 			console.verbose(`stdout = ${stdout}`);
 			if (stderr && stderr.length > 0)
 				throw new Error(`Error executing ${command}: ${stderr}`);
@@ -27,13 +29,12 @@ module.exports = {
 	 *                           Set `echo` to TRUE, to echo command passed.
 	 * @returns {Promise<{code: number, data: string | undefined, error: Object}>}
 	 */
-	spawn(command, {capture = false, echo = false} = {}) {
+	spawn (command, {capture = false, echo = false} = {}) {
 	  if (echo) {
 	    console.log(command);
 	  }
 	  
-	  const spawn = require('child_process').spawn;
-	  const childProcess = spawn('bash', ['-c', command], {stdio: capture ? 'pipe' : 'inherit'});
+	  const childProcess = nodeSpawn('bash', ['-c', command], {stdio: capture ? 'pipe' : 'inherit'});
 
 	  return new Promise((resolve, reject) => {
 	    let stdout = '';

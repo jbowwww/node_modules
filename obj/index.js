@@ -1,6 +1,6 @@
 
 const inspect = require('util').inspect;
-const _ = require('lodash');
+const _ = require('lodash');	// todo: gradually replce with ES6
 // const { AsyncGeneratorFunction } = require('@jbowwww/async-generator');
 const AsyncGeneratorFunction = Object.getPrototypeOf(async function*(){}).constructor;
 
@@ -26,10 +26,25 @@ module.exports = {
 	keys: obj => { let keys = []; for (const k in obj) keys.push(k); return keys; },
 	map: (obj, fn) => Object.fromEntries(Object.entries(obj).map(fn)),
 	fromEntries: Object.fromEntries,
-	assign(...args) { return _.assign(...args); },
+	assign(obj, props) {
+		return Object.defineProperties(obj,
+			Object.fromEntries(Object.getOwnPropertyNames(props)
+				.filter(funcName => typeof props[funcName] === 'function')
+				.map(funcName => ([funcName, { value: props[funcName] }]))
+			)
+		);
+	},
 	assignDefaults(target, defaults = {}) {
 		return target = _.defaults(target, defaults); //this.assign({}, defaults, target);
 	},
+	mixin(_class, mixin) {
+		return Object,defineProperties(_class.prototype,
+			Object.fromEntries(Object.getOwnPropertyNames(mixin)
+				.filter(funcName => typeof mixin[funcName] === 'function')
+				.map(funcName => ([funcName, { value: mixin[funcName] }]))
+			)
+		);
+	}
 	with(...args) { return this.assign({}, ...args); },
 	without(base, ...without) { 
 		let r = this.assign({}, base);
